@@ -9,7 +9,7 @@ import (
 	"github.com/unmango/aferox/github/repository/content"
 )
 
-var _ = Describe("Fs", func() {
+var _ = Describe("Fs", Label("E2E"), func() {
 	It("should stat file", func() {
 		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
 

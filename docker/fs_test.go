@@ -10,7 +10,7 @@ import (
 	"github.com/unmango/aferox/docker"
 )
 
-var _ = Describe("Fs", func() {
+var _ = Describe("Fs", Label("E2E"), func() {
 	It("should list directories", func(ctx context.Context) {
 		fs := docker.NewFs(testclient, ctr.GetContainerID())
 		dir, err := fs.Open(ctx, "/")
