@@ -16,7 +16,6 @@ import (
 )
 
 type (
-	Docker                  = docker.Fs
 	GitHub                  = github.Fs
 	GitHubRelease           = release.Fs
 	GitHubRepository        = repository.Fs
