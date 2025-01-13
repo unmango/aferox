@@ -1,0 +1,8 @@
+bin/
+report.json
+cover.profile
+go.work*
+.vscode/settings.json
+.make/
+*.test
+.envrc
