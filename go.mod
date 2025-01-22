@@ -4,7 +4,7 @@ go 1.23.4
 
 require (
 	github.com/charmbracelet/log v0.4.0
-	github.com/docker/docker v27.5.0+incompatible
+	github.com/docker/docker v27.5.1+incompatible
 	github.com/google/go-github/v68 v68.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.22.2
