@@ -6,6 +6,7 @@ require (
 	github.com/charmbracelet/log v0.4.0
 	github.com/docker/docker v27.5.1+incompatible
 	github.com/google/go-github/v68 v68.0.0
+	github.com/google/go-github/v69 v69.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.22.2
 	github.com/onsi/gomega v1.36.2
