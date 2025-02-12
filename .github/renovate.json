@@ -2,5 +2,9 @@
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
 		"config:recommended"
-	]
+	],
+  "timezone": "America/Chicago",
+  "schedule": [
+    "before 4am on the first day of the month"
+  ]
 }
