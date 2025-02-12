@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/spf13/afero"
 
-	aferox "github.com/unmango/aferox"
+	"github.com/unmango/aferox"
 )
 
 var _ = Describe("Single", func() {
