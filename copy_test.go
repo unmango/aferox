@@ -7,8 +7,8 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/spf13/afero"
 
-	aferox "github.com/unmango/aferox"
-	"github.com/unmango/go/testing/gfs"
+	"github.com/unmango/aferox"
+	"github.com/unmango/aferox/testing/gfs"
 )
 
 var _ = Describe("Copy", func() {

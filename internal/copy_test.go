@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/afero"
 
 	"github.com/unmango/aferox/internal"
-	"github.com/unmango/go/testing/gfs"
+	"github.com/unmango/aferox/testing/gfs"
 )
 
 var _ = Describe("Copy", func() {
