@@ -13,7 +13,7 @@ require (
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06
 	github.com/spf13/afero v1.12.0
 	github.com/testcontainers/testcontainers-go v0.35.0
-	github.com/unmango/go v0.2.2
+	github.com/unmango/go v0.3.0
 )
 
 require (
