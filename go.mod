@@ -8,7 +8,7 @@ tool (
 )
 
 require (
-	github.com/charmbracelet/log v0.4.0
+	github.com/charmbracelet/log v0.4.1
 	github.com/docker/docker v28.0.4+incompatible
 	github.com/google/go-github/v69 v69.2.0
 	github.com/goware/urlx v0.3.2
