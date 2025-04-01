@@ -9,7 +9,7 @@ tool (
 
 require (
 	github.com/charmbracelet/log v0.4.0
-	github.com/docker/docker v28.0.1+incompatible
+	github.com/docker/docker v28.0.4+incompatible
 	github.com/google/go-github/v69 v69.2.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.23.0
