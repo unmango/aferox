@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/google/go-github/v69/github"
+	"github.com/google/go-github/v72/github"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )

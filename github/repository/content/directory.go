@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"syscall"
 
-	"github.com/google/go-github/v69/github"
+	"github.com/google/go-github/v72/github"
 	"github.com/unmango/aferox/github/ghpath"
 	"github.com/unmango/aferox/github/internal"
 )
