@@ -8,6 +8,8 @@ tool (
 )
 
 require (
+	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250609000540-7e28ed63c5a8.2
+	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250609000540-7e28ed63c5a8.1
 	github.com/charmbracelet/log v0.4.2
 	github.com/docker/docker v28.2.2+incompatible
 	github.com/google/go-github/v72 v72.0.0
@@ -18,6 +20,8 @@ require (
 	github.com/spf13/afero v1.14.0
 	github.com/testcontainers/testcontainers-go v0.37.0
 	github.com/unmango/go v0.4.1
+	google.golang.org/grpc v1.69.4
+	google.golang.org/protobuf v1.36.5
 )
 
 require (
@@ -100,5 +104,6 @@ require (
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
 	golang.org/x/tools v0.31.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250115164207-1a7da9e5054f // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
