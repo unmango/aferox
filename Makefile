@@ -1,10 +1,13 @@
 _ := $(shell mkdir -p .make bin)
-
-WORKING_DIR := $(shell pwd)
-LOCALBIN    := ${WORKING_DIR}/bin
+export GOWORK := off
 
 DEVCTL := go tool devctl
 GINKGO := go tool ginkgo
+
+MODULES := docker github protofs
+
+# GO_SRC != $(DEVCTL) list --go
+GO_SRC != find . -type f -path '*.go'
 
 ifeq ($(CI),)
 TEST_FLAGS := --label-filter !E2E
@@ -14,27 +17,35 @@ endif
 
 build: .make/build
 test: .make/test
-tidy: go.sum
+tidy: go.sum $(addsuffix /go.sum,${MODULES})
 
 test_all:
 	$(GINKGO) run -r ./
 
-go.sum: go.mod $(shell $(DEVCTL) list --go)
+%/go.sum: %/go.mod ${GO_SRC}
+	go -C $? mod tidy
+
+go.sum: go.mod ${GO_SRC}
 	go mod tidy
+
+go.work: $(addsuffix /go.mod,${MODULES})
+	go work init
+	go work use ${MODULES}
+go.work.sum: go.work
+	go work sync
 
 %_suite_test.go:
 	cd $(dir $@) && $(GINKGO) bootstrap
-
 %_test.go:
 	cd $(dir $@) && $(GINKGO) generate $(notdir $*)
 
 .envrc: hack/example.envrc
 	cp $< $@
 
-.make/build: $(shell $(DEVCTL) list --go --exclude-tests)
+.make/build: $(filter-out %_test.go,${GO_SRC})
 	go build ./...
 	@touch $@
 
-.make/test: $(shell $(DEVCTL) list --go)
+.make/test: ${GO_SRC}
 	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))
 	@touch $@
