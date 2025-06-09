@@ -1,7 +1,7 @@
-buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250608185708-94861fd2bfb2.2 h1:xT23Qg4SEFeG7rYfLOcEm3IFpDwkxkG4sq7lTmttdrw=
-buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250608185708-94861fd2bfb2.2/go.mod h1:rl8rwzPpqldg3uOuvfA5k7nsrTBP2zsZcdSwWcIIWwk=
-buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250608185708-94861fd2bfb2.1 h1:dRtn4kgUrjJE5Q4pQejIFXHMUtjQ6X5fwI1FsOW+Lqo=
-buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250608185708-94861fd2bfb2.1/go.mod h1:IB6/vtITRFTEkxj3NdKXmvzk6eWbltUR6VrC8J2t1Fs=
+buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250608230300-ca359089b843.2 h1:AW5FWesb1eSE+8XvsSpjTQmhudhHduxwkRFvVQJLZhU=
+buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250608230300-ca359089b843.2/go.mod h1:LpH5NKNQcVDVsAvBv4gIX5UlnXgDo0IGTmo2ERTUSOM=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250608230300-ca359089b843.1 h1:mXGEymDcJkE4UaOPI5FeqfPmdp6+OuXqWIPNdwoMEO0=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250608230300-ca359089b843.1/go.mod h1:IB6/vtITRFTEkxj3NdKXmvzk6eWbltUR6VrC8J2t1Fs=
 dario.cat/mergo v1.0.1 h1:Ra4+bf83h2ztPIQYNP99R6m+Y7KfnARDfID+a+vLl4s=
 dario.cat/mergo v1.0.1/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 h1:He8afgbRMd7mFxO99hRNu+6tazq8nFF9lIwo9JFroBk=
