@@ -17,7 +17,7 @@ endif
 
 build: .make/build
 test: .make/test
-tidy: go.sum $(addsuffix /go.sum,${MODULES})
+tidy: go.sum ${MODULES:%=%/go.sum}
 
 test_all:
 	$(GINKGO) run -r ./
@@ -28,7 +28,7 @@ test_all:
 go.sum: go.mod ${GO_SRC}
 	go mod tidy
 
-go.work: $(addsuffix /go.mod,${MODULES})
+go.work: ${MODULES:%=%/go.mod}
 	go work init
 	go work use ${MODULES}
 go.work.sum: go.work
@@ -46,6 +46,6 @@ go.work.sum: go.work
 	go build ./...
 	@touch $@
 
-.make/test: ${GO_SRC}
+.make/test: $(filter-out ${MODULES:%=./%/%},${GO_SRC})
 	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))
 	@touch $@
