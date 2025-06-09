@@ -23,7 +23,7 @@ test_all:
 	$(GINKGO) run -r ./
 
 %/go.sum: %/go.mod ${GO_SRC}
-	go -C $? mod tidy
+	go -C $* mod tidy
 
 go.sum: go.mod ${GO_SRC}
 	go mod tidy
