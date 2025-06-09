@@ -8,8 +8,8 @@ tool (
 )
 
 require (
-	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250608230300-ca359089b843.2
-	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250608230300-ca359089b843.1
+	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250609000540-7e28ed63c5a8.2
+	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.1-20250609000540-7e28ed63c5a8.1
 	github.com/charmbracelet/log v0.4.2
 	github.com/docker/docker v28.2.2+incompatible
 	github.com/google/go-github/v72 v72.0.0
