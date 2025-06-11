@@ -1,7 +1,6 @@
 package aferox
 
 import (
-	"os"
 	"syscall"
 )
 
@@ -11,11 +10,6 @@ type ReadOnlyFile struct{}
 // Seek implements afero.File.
 func (r *ReadOnlyFile) Seek(offset int64, whence int) (int64, error) {
 	return 0, syscall.EPERM
-}
-
-// Stat implements afero.File.
-func (r *ReadOnlyFile) Stat() (os.FileInfo, error) {
-	return nil, syscall.EPERM
 }
 
 // Sync implements afero.File.
