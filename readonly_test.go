@@ -16,6 +16,18 @@ var _ = Describe("Readonly", func() {
 		file = &aferox.ReadOnlyFile{}
 	})
 
+	It("should error on readdir", func() {
+		_, err := file.Readdir(0)
+
+		Expect(err).To(MatchError(syscall.EPERM))
+	})
+
+	It("should error on readdir names", func() {
+		_, err := file.Readdirnames(0)
+
+		Expect(err).To(MatchError(syscall.EPERM))
+	})
+
 	It("should error on seek", func() {
 		_, err := file.Seek(0, 0)
 
