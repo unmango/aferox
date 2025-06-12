@@ -37,8 +37,7 @@ func (f File) Read(p []byte) (n int, err error) {
 		return 0, err
 	}
 
-	_ = copy(res.Data, p)
-	return int(res.N), nil
+	return copy(res.Data, p), nil
 }
 
 // ReadAt implements afero.File.

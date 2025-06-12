@@ -3,8 +3,8 @@ module github.com/unmango/aferox/protofs
 go 1.24.3
 
 require (
-	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250609000540-7e28ed63c5a8.2
-	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250609000540-7e28ed63c5a8.1
+	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612035230-501bd2c8b69f.2
+	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612035230-501bd2c8b69f.1
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
 	github.com/spf13/afero v1.14.0
@@ -16,7 +16,7 @@ require (
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/pprof v0.0.0-20250403155104-27863c87afa6 // indirect
+	github.com/google/pprof v0.0.0-20250607225305-033d6d78b36a // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
