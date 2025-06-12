@@ -1,9 +1,5 @@
-buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612035230-501bd2c8b69f.2 h1:L7nrc+P27rsFzyygeSr0cfQmscp7Xcu406H5fnlrypk=
-buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612035230-501bd2c8b69f.2/go.mod h1:r3/8RmF74QTCcizLXzGdNn1UrNoBMPqUmuGB0UVpxwI=
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612163730-cd886ede7b58.2 h1:R25s9zuXUub5xxPs0XQObdt8GaWwNKnVhhJ6MxWlrkU=
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612163730-cd886ede7b58.2/go.mod h1:w2h934P13Wxrt9tYgn9AEQkPe/+cDEx89n2R6V27zIE=
-buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612035230-501bd2c8b69f.1 h1:n+F8YQf8qPGrtGRomEW3M9H05cojdCQ2J0gioGyU8Qs=
-buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612035230-501bd2c8b69f.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc7c30f96.1 h1:e9I2nVPd17I17iMtZLkFHcyb+BUfkl5igKpATNAWMvw=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc7c30f96.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
