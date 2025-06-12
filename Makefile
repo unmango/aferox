@@ -28,9 +28,10 @@ test_all:
 go.sum: go.mod ${GO_SRC}
 	go mod tidy
 
+go.work: export GOWORK :=
 go.work: ${MODULES:%=%/go.mod}
 	go work init
-	go work use ${MODULES}
+	go work use . ${MODULES}
 go.work.sum: go.work
 	go work sync
 
