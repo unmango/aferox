@@ -20,7 +20,9 @@ var _ = Describe("Readonly", func() {
 		})
 
 		It("should error on Create", func() {
-			Expect(fs.Create("")).To(MatchError(syscall.EPERM))
+			_, err := fs.Create("")
+
+			Expect(err).To(MatchError(syscall.EPERM))
 		})
 
 		It("should error on Chmod", func() {
