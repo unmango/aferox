@@ -50,8 +50,7 @@ func (f File) ReadAt(p []byte, off int64) (n int, err error) {
 		return 0, err
 	}
 
-	_ = copy(res.Data, p)
-	return int(res.N), nil
+	return copy(res.Data, p), nil
 }
 
 // Readdir implements afero.File.
@@ -115,7 +114,7 @@ func (f File) Truncate(size int64) error {
 
 // Write implements afero.File.
 func (f File) Write(p []byte) (n int, err error) {
-	res, err := f.client.Write(context.TODO(), &filev1alpha1.WriteRequest{
+	_, err = f.client.Write(context.TODO(), &filev1alpha1.WriteRequest{
 		File: f.file,
 		Data: p,
 	})
@@ -123,12 +122,12 @@ func (f File) Write(p []byte) (n int, err error) {
 		return 0, err
 	}
 
-	return int(res.N), nil
+	return len(p), nil
 }
 
 // WriteAt implements afero.File.
 func (f File) WriteAt(p []byte, off int64) (n int, err error) {
-	res, err := f.client.WriteAt(context.TODO(), &filev1alpha1.WriteAtRequest{
+	_, err = f.client.WriteAt(context.TODO(), &filev1alpha1.WriteAtRequest{
 		File:   f.file,
 		Data:   p,
 		Offset: off,
@@ -137,7 +136,7 @@ func (f File) WriteAt(p []byte, off int64) (n int, err error) {
 		return 0, err
 	}
 
-	return int(res.N), nil
+	return len(p), nil
 }
 
 // WriteString implements afero.File.
@@ -164,7 +163,6 @@ func (s *FileServer) Read(_ context.Context, req *filev1alpha1.ReadRequest) (*fi
 
 	return &filev1alpha1.ReadResponse{
 		Data: data,
-		N:    int32(len(data)),
 	}, nil
 }
 
@@ -180,14 +178,13 @@ func (s *FileServer) ReadAt(_ context.Context, req *filev1alpha1.ReadAtRequest) 
 	}
 
 	buf := make([]byte, 0, info.Size())
-	n, err := file.ReadAt(buf, req.Offset)
+	_, err = file.ReadAt(buf, req.Offset)
 	if err != nil {
 		return nil, err
 	}
 
 	return &filev1alpha1.ReadAtResponse{
 		Data: buf,
-		N:    int32(n),
 	}, nil
 }
 
@@ -262,9 +259,9 @@ func (s *FileServer) Truncate(_ context.Context, req *filev1alpha1.TruncateReque
 
 	if err := file.Truncate(req.Size); err != nil {
 		return nil, err
+	} else {
+		return &filev1alpha1.TruncateResponse{}, nil
 	}
-
-	return &filev1alpha1.TruncateResponse{}, nil
 }
 
 func (s *FileServer) Write(_ context.Context, req *filev1alpha1.WriteRequest) (*filev1alpha1.WriteResponse, error) {
@@ -273,14 +270,11 @@ func (s *FileServer) Write(_ context.Context, req *filev1alpha1.WriteRequest) (*
 		return nil, err
 	}
 
-	n, err := file.Write(req.Data)
-	if err != nil {
+	if _, err = file.Write(req.Data); err != nil {
 		return nil, err
+	} else {
+		return &filev1alpha1.WriteResponse{}, nil
 	}
-
-	return &filev1alpha1.WriteResponse{
-		N: int32(n),
-	}, nil
 }
 
 func (s *FileServer) WriteAt(_ context.Context, req *filev1alpha1.WriteAtRequest) (*filev1alpha1.WriteAtResponse, error) {
@@ -289,14 +283,11 @@ func (s *FileServer) WriteAt(_ context.Context, req *filev1alpha1.WriteAtRequest
 		return nil, err
 	}
 
-	n, err := file.WriteAt(req.Data, req.Offset)
-	if err != nil {
+	if _, err = file.WriteAt(req.Data, req.Offset); err != nil {
 		return nil, err
+	} else {
+		return &filev1alpha1.WriteAtResponse{}, nil
 	}
-
-	return &filev1alpha1.WriteAtResponse{
-		N: int32(n),
-	}, nil
 }
 
 func RegisterFileServer(s grpc.ServiceRegistrar, fs afero.Fs) {

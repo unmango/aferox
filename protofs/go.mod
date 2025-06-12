@@ -3,8 +3,8 @@ module github.com/unmango/aferox/protofs
 go 1.24.3
 
 require (
-	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612035230-501bd2c8b69f.2
-	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612035230-501bd2c8b69f.1
+	buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612163730-cd886ede7b58.2
+	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc7c30f96.1
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
 	github.com/spf13/afero v1.14.0
