@@ -9,35 +9,35 @@ import (
 )
 
 type FileInfo struct {
-	info *filev1alpha1.FileInfo
+	Proto *filev1alpha1.FileInfo
 }
 
 // IsDir implements fs.FileInfo.
 func (f FileInfo) IsDir() bool {
-	return f.info.IsDir
+	return f.Proto.IsDir
 }
 
 // ModTime implements fs.FileInfo.
 func (f FileInfo) ModTime() time.Time {
-	return f.info.ModTime.AsTime()
+	return f.Proto.ModTime.AsTime()
 }
 
 // Mode implements fs.FileInfo.
 func (f FileInfo) Mode() fs.FileMode {
-	return internal.OsFileMode(f.info.Mode)
+	return internal.OsFileMode(f.Proto.Mode)
 }
 
 // Name implements fs.FileInfo.
 func (f FileInfo) Name() string {
-	return f.info.Name
+	return f.Proto.Name
 }
 
 // Size implements fs.FileInfo.
 func (f FileInfo) Size() int64 {
-	return f.info.Size
+	return f.Proto.Size
 }
 
 // Sys implements fs.FileInfo.
 func (f FileInfo) Sys() any {
-	return f.info.Sys
+	return f.Proto.Sys
 }

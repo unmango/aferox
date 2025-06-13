@@ -40,7 +40,7 @@ func (f File) Read(p []byte) (n int, err error) {
 		return 0, err
 	}
 
-	return copy(res.Data, p), nil
+	return copy(p, res.Data), io.EOF
 }
 
 // ReadAt implements afero.File.
@@ -53,7 +53,7 @@ func (f File) ReadAt(p []byte, off int64) (n int, err error) {
 		return 0, err
 	}
 
-	return copy(res.Data, p), nil
+	return copy(p, res.Data), io.EOF
 }
 
 // Readdir implements afero.File.
