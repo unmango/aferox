@@ -8,6 +8,8 @@ buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc7c30f96.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250613043435-2c11e450c08d.1 h1:gIgGqtohYweMzlakYSw3LoDmmBh/bm+y9Xw+eKj1GIQ=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250613043435-2c11e450c08d.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250613050322-304b4fb5d9b0.1 h1:CA2CQi87aWtYNs67Kl2QpJYvW0tUcUa5FAL2PCx7UjA=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250613050322-304b4fb5d9b0.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
