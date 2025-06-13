@@ -1,7 +1,11 @@
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612163730-cd886ede7b58.2 h1:R25s9zuXUub5xxPs0XQObdt8GaWwNKnVhhJ6MxWlrkU=
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612163730-cd886ede7b58.2/go.mod h1:w2h934P13Wxrt9tYgn9AEQkPe/+cDEx89n2R6V27zIE=
+buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612165200-244dc7c30f96.2 h1:bi1wTamI+LyObY3N4Blp2Yyh3rfF+IVPOot6t1oAozg=
+buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250612165200-244dc7c30f96.2/go.mod h1:BL9cf+6T2/RsnKAuOKPQz3smOzeXpTEKOVZI6srP3Hg=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc7c30f96.1 h1:e9I2nVPd17I17iMtZLkFHcyb+BUfkl5igKpATNAWMvw=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250612165200-244dc7c30f96.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250613043435-2c11e450c08d.1 h1:gIgGqtohYweMzlakYSw3LoDmmBh/bm+y9Xw+eKj1GIQ=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.6-20250613043435-2c11e450c08d.1/go.mod h1:NzOPPkj7FX3zu/xKWh45jFChv6lKd+XXUeUSIpb+C4c=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -75,3 +79,5 @@ gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c h1:Hei/4ADfdWqJk1ZMxUNpqntN
 gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c/go.mod h1:JHkPIbrfpd72SG/EVd6muEfDQjcINNoR0C8j2r3qZ4Q=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+k8s.io/utils v0.0.0-20250604170112-4c0f3b243397 h1:hwvWFiBzdWw1FhfY1FooPn3kzWuJ8tmbZBHi4zVsl1Y=
+k8s.io/utils v0.0.0-20250604170112-4c0f3b243397/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=

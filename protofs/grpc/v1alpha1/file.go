@@ -11,11 +11,14 @@ import (
 	"github.com/unmango/aferox/protofs/internal"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"k8s.io/utils/ptr"
 )
 
 type File struct {
 	client filev1alpha1grpc.FileServiceClient
 	file   *filev1alpha1.File
+	flag   *int
+	perm   *os.FileMode
 }
 
 // Close implements afero.File.
@@ -151,7 +154,7 @@ type FileServer struct {
 }
 
 func (s *FileServer) Read(_ context.Context, req *filev1alpha1.ReadRequest) (*filev1alpha1.ReadResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +170,7 @@ func (s *FileServer) Read(_ context.Context, req *filev1alpha1.ReadRequest) (*fi
 }
 
 func (s *FileServer) ReadAt(_ context.Context, req *filev1alpha1.ReadAtRequest) (*filev1alpha1.ReadAtResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +192,7 @@ func (s *FileServer) ReadAt(_ context.Context, req *filev1alpha1.ReadAtRequest) 
 }
 
 func (s *FileServer) Readdir(_ context.Context, req *filev1alpha1.ReaddirRequest) (*filev1alpha1.ReaddirResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +217,7 @@ func (s *FileServer) Readdir(_ context.Context, req *filev1alpha1.ReaddirRequest
 }
 
 func (s *FileServer) ReaddirNames(_ context.Context, req *filev1alpha1.ReaddirNamesRequest) (*filev1alpha1.ReaddirNamesResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +233,7 @@ func (s *FileServer) ReaddirNames(_ context.Context, req *filev1alpha1.ReaddirNa
 }
 
 func (s *FileServer) Stat(_ context.Context, req *filev1alpha1.StatRequest) (*filev1alpha1.StatResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +255,7 @@ func (s *FileServer) Stat(_ context.Context, req *filev1alpha1.StatRequest) (*fi
 }
 
 func (s *FileServer) Truncate(_ context.Context, req *filev1alpha1.TruncateRequest) (*filev1alpha1.TruncateResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -265,7 +268,7 @@ func (s *FileServer) Truncate(_ context.Context, req *filev1alpha1.TruncateReque
 }
 
 func (s *FileServer) Write(_ context.Context, req *filev1alpha1.WriteRequest) (*filev1alpha1.WriteResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -278,7 +281,7 @@ func (s *FileServer) Write(_ context.Context, req *filev1alpha1.WriteRequest) (*
 }
 
 func (s *FileServer) WriteAt(_ context.Context, req *filev1alpha1.WriteAtRequest) (*filev1alpha1.WriteAtResponse, error) {
-	file, err := s.Fs.Open(req.File.Name)
+	file, err := s.open(req.File)
 	if err != nil {
 		return nil, err
 	}
@@ -287,6 +290,17 @@ func (s *FileServer) WriteAt(_ context.Context, req *filev1alpha1.WriteAtRequest
 		return nil, err
 	} else {
 		return &filev1alpha1.WriteAtResponse{}, nil
+	}
+}
+
+func (s *FileServer) open(file *filev1alpha1.File) (afero.File, error) {
+	if file.Flag == nil && file.Perm == nil {
+		return s.Fs.Open(file.Name)
+	} else {
+		return s.Fs.OpenFile(file.Name,
+			int(ptr.Deref(file.Flag, 0)),
+			internal.OsFileMode(ptr.Deref(file.Perm, filev1alpha1.FileMode_FILE_MODE_PERM)),
+		)
 	}
 }
 
