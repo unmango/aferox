@@ -1,13 +1,11 @@
 package protofsv1alpha1_test
 
 import (
-	"context"
 	"fmt"
+	"io"
 	"net"
 	"path/filepath"
 
-	"buf.build/gen/go/unmango/protofs/grpc/go/dev/unmango/fs/v1alpha1/fsv1alpha1grpc"
-	fsv1alpha1 "buf.build/gen/go/unmango/protofs/protocolbuffers/go/dev/unmango/fs/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -17,16 +15,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var _ = Describe("Fs", func() {
-	var (
-		fs     afero.Fs
-		client fsv1alpha1grpc.FsServiceClient
-	)
+var _ = Describe("E2e", func() {
+	var client, fs afero.Fs
 
 	BeforeEach(func() {
 		fs = afero.NewMemMapFs()
 		server := grpc.NewServer()
 		protofsv1alpha1.RegisterFsServer(server, fs)
+		protofsv1alpha1.RegisterFileServer(server, fs)
 
 		tmp := GinkgoT().TempDir()
 		sock := filepath.Join(tmp, "fs.sock")
@@ -43,17 +39,14 @@ var _ = Describe("Fs", func() {
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 		)
 		Expect(err).NotTo(HaveOccurred())
-		client = fsv1alpha1grpc.NewFsServiceClient(conn)
+		client = protofsv1alpha1.NewFs(conn)
 	})
 
-	It("should create a file", func(ctx context.Context) {
-		_, err := client.Create(ctx, &fsv1alpha1.CreateRequest{
-			Name: "test.txt",
-		})
+	It("should create a writable file", func() {
+		file, err := client.Create("test.txt")
 		Expect(err).NotTo(HaveOccurred())
 
-		stat, err := fs.Stat("test.txt")
+		_, err = io.WriteString(file, "testing text")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(stat.Name()).To(Equal("test.txt"))
 	})
 })
