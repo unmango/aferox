@@ -53,7 +53,7 @@ func (f File) ReadAt(p []byte, off int64) (n int, err error) {
 		return 0, err
 	}
 
-	return copy(res.Data, p), io.EOF
+	return copy(p, res.Data), io.EOF
 }
 
 // Readdir implements afero.File.
