@@ -212,6 +212,7 @@ func (s *FsServer) Create(_ context.Context, req *fsv1alpha1.CreateRequest) (*fs
 		return &fsv1alpha1.CreateResponse{
 			File: &filev1alpha1.File{
 				Name: file.Name(),
+				Flag: ptr.To(int64(os.O_CREATE | os.O_RDWR)),
 			},
 		}, nil
 	}

@@ -48,5 +48,11 @@ var _ = Describe("E2e", func() {
 
 		_, err = io.WriteString(file, "testing text")
 		Expect(err).NotTo(HaveOccurred())
+
+		actual, err := fs.Open("test.txt")
+		Expect(err).NotTo(HaveOccurred())
+		data, err := io.ReadAll(actual)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(data)).To(Equal("testing text"))
 	})
 })
