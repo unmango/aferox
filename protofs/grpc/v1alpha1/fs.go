@@ -13,6 +13,7 @@ import (
 	"github.com/unmango/aferox/protofs/internal"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"k8s.io/utils/ptr"
 )
 
 type Fs struct {
@@ -71,6 +72,7 @@ func (f *Fs) Create(name string) (afero.File, error) {
 	return File{
 		client: filev1alpha1grpc.NewFileServiceClient(f.conn),
 		file:   res.File,
+		flag:   ptr.To(os.O_CREATE),
 	}, nil
 }
 
@@ -86,7 +88,12 @@ func (f *Fs) Mkdir(name string, perm os.FileMode) error {
 
 // MkdirAll implements afero.Fs.
 func (f *Fs) MkdirAll(path string, perm os.FileMode) error {
-	panic("unimplemented")
+	_, err := f.client.MkdirAll(context.TODO(), &fsv1alpha1.MkdirAllRequest{
+		Path: path,
+		Perm: internal.ProtoFileMode(perm),
+	})
+
+	return err
 }
 
 // Name implements afero.Fs.
@@ -123,6 +130,8 @@ func (f *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, erro
 	return File{
 		client: filev1alpha1grpc.NewFileServiceClient(f.conn),
 		file:   res.File,
+		flag:   ptr.To(flag),
+		perm:   ptr.To(perm),
 	}, nil
 }
 
