@@ -120,7 +120,7 @@ func (f *Fs) Open(name string) (afero.File, error) {
 func (f *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
 	res, err := f.client.OpenFile(context.TODO(), &fsv1alpha1.OpenFileRequest{
 		Name: name,
-		Flag: int32(flag),
+		Flag: int64(flag),
 		Perm: internal.ProtoFileMode(perm),
 	})
 	if err != nil {
@@ -244,6 +244,8 @@ func (s *FsServer) OpenFile(_ context.Context, req *fsv1alpha1.OpenFileRequest) 
 		return &fsv1alpha1.OpenFileResponse{
 			File: &filev1alpha1.File{
 				Name: file.Name(),
+				Flag: &req.Flag,
+				Perm: &req.Perm,
 			},
 		}, nil
 	}
