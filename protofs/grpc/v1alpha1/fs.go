@@ -226,6 +226,14 @@ func (s *FsServer) Mkdir(_ context.Context, req *fsv1alpha1.MkdirRequest) (*fsv1
 	}
 }
 
+func (s *FsServer) MkdirAll(_ context.Context, req *fsv1alpha1.MkdirAllRequest) (*fsv1alpha1.MkdirAllResponse, error) {
+	if err := s.Fs.MkdirAll(req.Path, internal.OsFileMode(req.Perm)); err != nil {
+		return nil, err
+	} else {
+		return &fsv1alpha1.MkdirAllResponse{}, nil
+	}
+}
+
 func (s *FsServer) Open(_ context.Context, req *fsv1alpha1.OpenRequest) (*fsv1alpha1.OpenResponse, error) {
 	if file, err := s.Fs.Open(req.Name); err != nil {
 		return nil, err
