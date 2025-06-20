@@ -1,6 +1,6 @@
 module github.com/unmango/aferox
 
-go 1.24.3
+go 1.24.4
 
 tool (
 	github.com/onsi/ginkgo/v2/ginkgo
@@ -41,7 +41,7 @@ require (
 	github.com/spf13/cobra v1.9.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/unmango/aferox/github v0.0.1 // indirect
-	github.com/unmango/devctl v0.1.8 // indirect
+	github.com/unmango/devctl v0.2.1 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	golang.org/x/exp v0.0.0-20250606033433-dcc06ee1d476 // indirect

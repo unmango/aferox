@@ -1,6 +1,6 @@
 module github.com/unmango/aferox/docker
 
-go 1.24.3
+go 1.24.4
 
 replace github.com/unmango/aferox => ../
 
