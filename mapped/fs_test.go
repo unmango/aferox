@@ -28,6 +28,22 @@ var _ = Describe("Fs", func() {
 		Expect(string(data)).To(Equal("testing"))
 	})
 
+	It("should open a file at the root of the nested fs", func() {
+		testFs := afero.NewMemMapFs()
+		err := afero.WriteFile(testFs, "/test.txt", []byte("testing"), os.ModePerm)
+		Expect(err).NotTo(HaveOccurred())
+		fs := mapped.NewFs(map[string]afero.Fs{
+			"test": testFs,
+		})
+
+		f, err := fs.Open("/test/test.txt")
+
+		Expect(err).NotTo(HaveOccurred())
+		data, err := io.ReadAll(f)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(data)).To(Equal("testing"))
+	})
+
 	It("should open a file in an fs with multiple path segments", func() {
 		testFs := afero.NewMemMapFs()
 		err := afero.WriteFile(testFs, "test.txt", []byte("testing"), os.ModePerm)
@@ -60,7 +76,7 @@ var _ = Describe("Fs", func() {
 
 	It("should match rooted paths", func() {
 		testFs := afero.NewMemMapFs()
-		err := afero.WriteFile(testFs, "test.txt", []byte(""), os.ModePerm)
+		err := afero.WriteFile(testFs, "/test.txt", []byte(""), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
 		fs := mapped.NewFs(map[string]afero.Fs{
 			"test": testFs,

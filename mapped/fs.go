@@ -2,8 +2,8 @@ package mapped
 
 import (
 	"fmt"
-	"maps"
 	"os"
+	"path"
 	"time"
 
 	"github.com/spf13/afero"
@@ -14,7 +14,7 @@ type Fs map[string]afero.Fs
 func NewFs(m map[string]afero.Fs) afero.Fs {
 	fs := Fs{}
 	for k, v := range m {
-		fs[Clean(k)] = v
+		fs[path.Clean(k)] = v
 	}
 
 	return fs
@@ -130,7 +130,7 @@ func (f Fs) Stat(name string) (os.FileInfo, error) {
 }
 
 func (f Fs) split(name string) (key, path string, err error) {
-	for k := range maps.Keys(f) {
+	for k := range f {
 		if p, ok := CutPrefix(name, k); ok {
 			return k, p, nil
 		}
