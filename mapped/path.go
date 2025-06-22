@@ -5,13 +5,9 @@ import (
 	"strings"
 )
 
-func Clean(p string) string {
-	return strings.TrimLeft(path.Clean(p), "/")
-}
-
 func CutPrefix(s, prefix string) (after string, found bool) {
-	if after, found = strings.CutPrefix(Clean(s), prefix); found {
-		return Clean(after), found
+	if after, found = strings.CutPrefix(path.Clean(s), prefix); found {
+		return path.Clean(after), found
 	}
 
 	return
