@@ -1,14 +1,20 @@
 package mapped
 
 import (
+	"fmt"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
 func CutPrefix(s, prefix string) (after string, found bool) {
-	if after, found = strings.CutPrefix(path.Clean(s), prefix); found {
-		return path.Clean(after), found
+	if after, found = strings.CutPrefix(s, prefix); !found {
+		return
 	}
 
-	return
+	if path.IsAbs(s) {
+		return fmt.Sprint(filepath.Separator, after), true
+	} else {
+		return after, true
+	}
 }
