@@ -131,7 +131,6 @@ func (f Fs) Stat(name string) (os.FileInfo, error) {
 
 func (f Fs) split(name string) (key, path string, err error) {
 	for k := range f {
-		fmt.Println("Name: ", name)
 		if p, ok := CutPrefix(name, k); ok {
 			return k, p, nil
 		}

@@ -36,7 +36,7 @@ var _ = Describe("Fs", func() {
 			"test": testFs,
 		})
 
-		f, err := fs.Open("test/test.txt")
+		f, err := fs.Open("/test/test.txt")
 
 		Expect(err).NotTo(HaveOccurred())
 		data, err := io.ReadAll(f)
@@ -76,7 +76,7 @@ var _ = Describe("Fs", func() {
 
 	It("should match rooted paths", func() {
 		testFs := afero.NewMemMapFs()
-		err := afero.WriteFile(testFs, "test.txt", []byte(""), os.ModePerm)
+		err := afero.WriteFile(testFs, "/test.txt", []byte(""), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
 		fs := mapped.NewFs(map[string]afero.Fs{
 			"test": testFs,

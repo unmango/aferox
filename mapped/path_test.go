@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Path", func() {
-	FDescribe("CutPrefix", func() {
+	Describe("CutPrefix", func() {
 		DescribeTable("should cut matching prefixes",
 			func(prefix, s, expected string) {
 				actual, found := mapped.CutPrefix(s, prefix)
