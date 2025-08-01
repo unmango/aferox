@@ -5,7 +5,7 @@ go 1.24.4
 replace github.com/unmango/aferox => ../
 
 require (
-	github.com/docker/docker v28.3.0+incompatible
+	github.com/docker/docker v28.3.3+incompatible
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
 	github.com/spf13/afero v1.14.0
