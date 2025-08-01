@@ -83,6 +83,7 @@ github.com/unmango/aferox/github v0.0.1 h1:RbW0a7N7mDk5TkhxcEtDt9voaVYRoWKmfNql/
 github.com/unmango/aferox/github v0.0.1/go.mod h1:SZzx1l0WkKOO6+7Mc6UpJ4nuMYEiZiiaTOsejpwzndY=
 github.com/unmango/devctl v0.2.1 h1:Z5SWAFlHlewLknYI8RxtFRPR9wk1AFbJVb1R9R2nlSs=
 github.com/unmango/devctl v0.2.1/go.mod h1:m4PkV12n7mpgr/3RhXkKhXkpwC2L4UTyeDZtEt3WNZA=
+github.com/unmango/devctl v0.3.0/go.mod h1:CDhYFGq3laPpu+MHWt98ZR/39vOLO0ztNfPgsfSH7cs=
 github.com/unmango/go v0.5.0 h1:CiDedNOH7BNVHaJdiceq2Dcc0P7DnRmgIJ4SDLEEWok=
 github.com/unmango/go v0.5.0/go.mod h1:tScFvFdrUZ7PSjm1AXhjfP0Mvgzipk2AjvmfyWG/4ag=
 github.com/unmango/go v0.5.1 h1:gEDM8/w5weCPnFEAGtKPI/k0blrXlFD/fm53Hnhd9So=
