@@ -7,7 +7,7 @@ replace github.com/unmango/aferox => ../
 require (
 	github.com/docker/docker v28.3.0+incompatible
 	github.com/onsi/ginkgo/v2 v2.23.4
-	github.com/onsi/gomega v1.37.0
+	github.com/onsi/gomega v1.38.0
 	github.com/spf13/afero v1.14.0
 	github.com/testcontainers/testcontainers-go v0.37.0
 	github.com/unmango/aferox v0.2.0
