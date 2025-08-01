@@ -7,7 +7,7 @@ require (
 	github.com/google/go-github/v72 v72.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.23.4
-	github.com/onsi/gomega v1.37.0
+	github.com/onsi/gomega v1.38.0
 	github.com/spf13/afero v1.14.0
 )
 
