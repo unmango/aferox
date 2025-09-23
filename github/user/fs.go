@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 
-	"github.com/google/go-github/v72/github"
+	"github.com/google/go-github/v74/github"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/github/ghpath"
 	"github.com/unmango/aferox/github/internal"
