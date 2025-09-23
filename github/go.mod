@@ -5,6 +5,7 @@ go 1.24.3
 require (
 	github.com/charmbracelet/log v0.4.2
 	github.com/google/go-github/v72 v72.0.0
+	github.com/google/go-github/v74 v74.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.25.1
 	github.com/onsi/gomega v1.38.2
