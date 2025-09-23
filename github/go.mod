@@ -4,7 +4,6 @@ go 1.24.3
 
 require (
 	github.com/charmbracelet/log v0.4.2
-	github.com/google/go-github/v72 v72.0.0
 	github.com/google/go-github/v74 v74.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.25.1
@@ -42,7 +41,5 @@ require (
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/tools v0.36.0 // indirect
-	google.golang.org/protobuf v1.36.7 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
