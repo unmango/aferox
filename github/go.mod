@@ -2,11 +2,13 @@ module github.com/unmango/aferox/github
 
 go 1.25.1
 
+tool github.com/onsi/ginkgo/v2/ginkgo
+
 require (
 	github.com/charmbracelet/log v0.4.2
 	github.com/google/go-github/v75 v75.0.0
 	github.com/goware/urlx v0.3.2
-	github.com/onsi/ginkgo/v2 v2.25.1
+	github.com/onsi/ginkgo/v2 v2.25.3
 	github.com/onsi/gomega v1.38.2
 	github.com/spf13/afero v1.15.0
 )
@@ -25,7 +27,7 @@ require (
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/pprof v0.0.0-20250607225305-033d6d78b36a // indirect
+	github.com/google/pprof v0.0.0-20250923004556-9e5a51aed1e8 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/lucasb-eyer/go-colorful v1.3.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
