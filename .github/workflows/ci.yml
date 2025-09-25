@@ -29,7 +29,8 @@ jobs:
           --github-output \
           --race \
           --trace \
-          --coverprofile=cover.profile
+          --coverprofile=cover.profile \
+          --skip-package docker,github,protofs
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

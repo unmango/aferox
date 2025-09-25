@@ -32,5 +32,4 @@ jobs:
           go -C docker tool ginkgo run -r \
           --github-output \
           --race \
-          --trace \
-          --skip-package docker,github,protofs
+          --trace
