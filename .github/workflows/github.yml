@@ -1,0 +1,31 @@
+name: GitHub
+
+on:
+  push:
+    # For code coverage reports
+    branches: [main]
+    paths: [github/*]
+  pull_request:
+    branches: [main]
+    paths: [github/*]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: github/go.mod
+          cache-dependency-path: github/go.sum
+
+      - run: |
+          go -C github tool ginkgo run -r \
+          --github-output \
+          --race \
+          --trace

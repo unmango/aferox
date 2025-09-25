@@ -1,0 +1,31 @@
+name: Docker
+
+on:
+  push:
+    # For code coverage reports
+    branches: [main]
+    paths: [docker/*]
+  pull_request:
+    branches: [main]
+    paths: [docker/*]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: docker/go.mod
+          cache-dependency-path: docker/go.sum
+
+      - run: |
+          go -C docker tool ginkgo run -r \
+          --github-output \
+          --race \
+          --trace
