@@ -4,10 +4,14 @@ on:
   push:
     # For code coverage reports
     branches: [main]
-    paths: [protofs/*]
+    paths:
+      - .github/workflows/protofs.yml
+      - protofs/*
   pull_request:
     branches: [main]
-    paths: [protofs/*]
+    paths:
+      - .github/workflows/protofs.yml
+      - protofs/*
 
 permissions:
   contents: read

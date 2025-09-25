@@ -4,10 +4,14 @@ on:
   push:
     # For code coverage reports
     branches: [main]
-    paths: [docker/*]
+    paths:
+      - .github/workflows/docker.yml
+      - docker/*
   pull_request:
     branches: [main]
-    paths: [docker/*]
+    paths:
+      - .github/workflows/docker.yml
+      - docker/*
 
 permissions:
   contents: read
