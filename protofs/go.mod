@@ -1,6 +1,6 @@
 module github.com/unmango/aferox/protofs
 
-go 1.24.4
+go 1.25.1
 
 tool github.com/onsi/ginkgo/v2/ginkgo
 
