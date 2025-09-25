@@ -2,7 +2,9 @@
 
 # aferox
 
-The `aferox` packages expands on [`github.com/spf13/afero`](https://github.com/spf13/afero) by adding more `afero.Fs` implementations as well as various `afero.Fs` utility functions.
+The `aferox` packages expands on [`github.com/spf13/afero`](https://github.com/spf13/afero) by adding more `afero.Fs` implementations, as well as various `afero.Fs` utility functions.
+
+[Go Doc](https://pkg.go.dev/github.com/unmango/aferox)
 
 ## github
 
@@ -16,6 +18,14 @@ file, _ := fs.Open("https://github.com/unmango")
 
 // ["go", "thecluster", "pulumi-baremetal", ...]
 file.Readdirnames(420)
+```
+
+This package lives in a separate module to avoid adding a dependendy on GitHub to `aferox`.
+
+[Go Doc](https://pkg.go.dev/github.com/unmango/aferox/github)
+
+```shell
+go get github.com/unmango/aferox/github
 ```
 
 ## ignore
@@ -32,7 +42,7 @@ fs, _ := ignore.NewFsFromGitIgnoreReader(base, gitignore)
 
 ## filter
 
-The `filter` package adds a filtering implementation of `afero.Fs` similar to `afero.RegExpFs` at accepts a predicate instead.
+The `filter` package adds a filtering implementation of `afero.Fs` similar to `afero.RegExpFs`, but for predicates.
 
 ```go
 base := afero.NewMemMapFs()
@@ -50,6 +60,14 @@ The `docker` package adds a docker `afero.Fs` implementation for operating on th
 client := client.NewClientWithOpts(client.FromEnv)
 
 fs := docker.NewFs(client, "my-container-id")
+```
+
+This package lives in a separate module to avoid adding a dependency on docker to `aferox`.
+
+[Go Doc](https://pkg.go.dev/github.com/unmango/aferox/docker)
+
+```shell
+go get github.com/unmango/aferox/docker
 ```
 
 ## testing
@@ -110,4 +128,38 @@ The `context.Discard` function adapts an `afero.Fs` to a `context.AferoFs` by ig
 base := afero.NewMemMapFs()
 
 var fs context.AferoFs = context.Discard(base)
+```
+
+## protofs
+
+The `protofs` module contains a silly little idea I had for communicating filesystem information over gRPC.
+The protobuf definitions are over at <https://github.com/unmango/protofs/>.
+It... works?
+[It is not well tested](./protofs/grpc/v1alpha1/e2e_test.go) and probably performs poorly.
+Use at your own risk.
+
+[Go Doc](https://pkg.go.dev/github.com/unmango/aferox/protofs)
+
+### Server
+
+```go
+// Serve any afero.Fs implementation
+var fs afero.Fs
+
+server := grpc.NewServer()
+protofsv1alpha1.RegisterFsServer(server, fs)
+protofsv1alpha1.RegisterFileServer(server, fs)
+
+lis, _ := net.Listen("unix", "/tmp/fs.sock")
+server.Serve(lis)
+```
+
+### Client
+
+```go
+conn, _ := grpc.NewClient("unix:///tmp/fs.sock",
+  grpc.WithTransportCredentials(insecure.NewCredentials()),
+)
+
+var fs afero.Fs = protofsv1alpha1.NewFs(conn)
 ```
