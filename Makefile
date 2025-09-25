@@ -6,7 +6,7 @@ GINKGO    ?= go tool ginkgo
 GOMOD2NIX ?= go tool gomod2nix
 NIX       ?= nix
 
-MODULES := containerregistry docker github protofs
+MODULES := containerregistry docker github ignore protofs
 
 # GO_SRC != $(DEVCTL) list --go
 GO_SRC != find . -type f -path '*.go'
