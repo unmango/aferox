@@ -24,7 +24,13 @@ jobs:
           cache-dependency-path: go.sum
 
       - run: make build
-      - run: make test
+      - run: |
+          go tool ginkgo run -r \
+          --github-output \
+          --race \
+          --trace \
+          --coverprofile=cover.profile \
+          --skip-package docker,github,protofs
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
