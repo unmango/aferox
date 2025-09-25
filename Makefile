@@ -4,7 +4,7 @@ export GOWORK := off
 DEVCTL := go tool devctl
 GINKGO := go tool ginkgo
 
-MODULES := docker github protofs
+MODULES := docker github ignore protofs
 
 # GO_SRC != $(DEVCTL) list --go
 GO_SRC != find . -type f -path '*.go'
