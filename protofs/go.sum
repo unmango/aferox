@@ -2,6 +2,8 @@ buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250613050322-304b4fb5d9b0.2 h1
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250613050322-304b4fb5d9b0.2/go.mod h1:p9Bu43Z9XPM45bkt1ustU0HYpn0ku1tZohpSxFhgaVo=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.9-20250613050322-304b4fb5d9b0.1 h1:NPqCxEuo84N21XWcS03/fSU6Nug+6vu1fvoyR12YIsA=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.9-20250613050322-304b4fb5d9b0.1/go.mod h1:y6VoKbfMLfA4nR9g/h76lKj9UNYmiG5gUeb6WzV48zI=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.10-20250613050322-304b4fb5d9b0.1 h1:IlvuE4ZuHYnHKrEfgG9wt41H2MtKfMwnmKIKsBjJN4o=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.10-20250613050322-304b4fb5d9b0.1/go.mod h1:fgv0ZHDsA69NKZe/4M9QRZ5RypoPZyQMLOmdIHw5gPc=
 github.com/Masterminds/semver/v3 v3.4.0 h1:Zog+i5UMtVoCU8oKka5P7i9q9HgrJeGzI9SA1Xbatp0=
 github.com/Masterminds/semver/v3 v3.4.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
