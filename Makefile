@@ -29,6 +29,12 @@ test_all:
 
 gomod2nix.toml: go.mod go.sum
 	$(GOMOD2NIX)
+docker/gomod2nix.toml: docker/go.mod docker/go.sum
+	$(GOMOD2NIX) --dir ${@D}
+github/gomod2nix.toml: github/go.mod github/go.sum
+	$(GOMOD2NIX) --dir ${@D}
+protofs/gomod2nix.toml: protofs/go.mod protofs/go.sum
+	$(GOMOD2NIX) --dir ${@D}
 
 go.sum: go.mod ${GO_SRC}
 	go mod tidy

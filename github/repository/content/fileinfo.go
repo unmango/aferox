@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/google/go-github/v75/github"
+	"github.com/google/go-github/v79/github"
 )
 
 type FileInfo struct {
