@@ -7,7 +7,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 replace github.com/unmango/aferox => ../
 
 require (
-	github.com/docker/docker v28.5.1+incompatible
+	github.com/docker/docker v28.5.2+incompatible
 	github.com/onsi/ginkgo/v2 v2.27.2
 	github.com/onsi/gomega v1.38.2
 	github.com/spf13/afero v1.15.0
