@@ -1,8 +1,10 @@
 _ := $(shell mkdir -p .make bin)
 export GOWORK := off
 
-DEVCTL := go tool devctl
-GINKGO := go tool ginkgo
+GO        ?= go
+DEVCTL    ?= $(GO) tool devctl
+GINKGO    ?= $(GO) tool ginkgo
+GOMOD2NIX ?= $(GO) tool gomod2nix
 
 MODULES := docker github protofs
 
@@ -24,6 +26,9 @@ test_all:
 
 %/go.sum: %/go.mod ${GO_SRC}
 	go -C $* mod tidy
+
+gomod2nix.toml: go.mod go.sum
+	$(GOMOD2NIX)
 
 go.sum: go.mod ${GO_SRC}
 	go mod tidy
