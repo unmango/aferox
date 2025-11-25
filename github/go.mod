@@ -6,7 +6,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
 	github.com/charmbracelet/log v0.4.2
-	github.com/google/go-github/v75 v75.0.0
+	github.com/google/go-github/v79 v79.0.0
 	github.com/google/go-github/v79 v79.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.27.2
