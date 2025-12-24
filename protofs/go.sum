@@ -1,5 +1,7 @@
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250613050322-304b4fb5d9b0.2 h1:ZfQM8jy23kEfWmCZ2gJZP4UAmpc3u+8/65REdo0bKp0=
 buf.build/gen/go/unmango/protofs/grpc/go v1.5.1-20250613050322-304b4fb5d9b0.2/go.mod h1:p9Bu43Z9XPM45bkt1ustU0HYpn0ku1tZohpSxFhgaVo=
+buf.build/gen/go/unmango/protofs/grpc/go v1.6.0-20250613050322-304b4fb5d9b0.1 h1:fX85k1QmZwwFWyPqurP0aO70KsSbNb/BhCxkGu7bOxc=
+buf.build/gen/go/unmango/protofs/grpc/go v1.6.0-20250613050322-304b4fb5d9b0.1/go.mod h1:Nxdv3iVmpQYbGq/2NWaJheflc+oow8/9UDQGgEfRMd8=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.9-20250613050322-304b4fb5d9b0.1 h1:NPqCxEuo84N21XWcS03/fSU6Nug+6vu1fvoyR12YIsA=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.9-20250613050322-304b4fb5d9b0.1/go.mod h1:y6VoKbfMLfA4nR9g/h76lKj9UNYmiG5gUeb6WzV48zI=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.10-20250613050322-304b4fb5d9b0.1 h1:IlvuE4ZuHYnHKrEfgG9wt41H2MtKfMwnmKIKsBjJN4o=
