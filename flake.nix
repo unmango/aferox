@@ -22,7 +22,12 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
 
-      imports = [ inputs.treefmt-nix.flakeModule ];
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        ./docker
+	./github
+	./protofs
+      ];
 
       perSystem =
         {
@@ -32,7 +37,9 @@
           ...
         }:
         let
-          inherit (inputs'.gomod2nix.legacyPackages) buildGoApplication;
+          inherit (inputs'.gomod2nix.legacyPackages) buildGoApplication mkGoEnv;
+
+          goEnv = mkGoEnv { pwd = ./.; };
 
           aferox = buildGoApplication {
             pname = "aferox";
@@ -58,6 +65,7 @@
 
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
+	      goEnv
               git
               gnumake
               go
