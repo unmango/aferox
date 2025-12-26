@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: cachix/install-nix-action@v32
+      - uses: cachix/install-nix-action@v31.9.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
