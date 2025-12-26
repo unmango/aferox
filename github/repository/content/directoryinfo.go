@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/google/go-github/v75/github"
+	"github.com/google/go-github/v80/github"
 )
 
 type DirectoryInfo struct {

@@ -37,3 +37,15 @@ jobs:
         with:
           use_oidc: true
           files: cover.profile
+
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v32
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Leaving out docker until ./context exists on main
+      - run: nix build .#aferox .#aferox-github .#aferox-protofs

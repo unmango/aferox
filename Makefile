@@ -1,8 +1,10 @@
 _ := $(shell mkdir -p .make bin)
 export GOWORK := off
 
-DEVCTL := go tool devctl
-GINKGO := go tool ginkgo
+DEVCTL    ?= go tool devctl
+GINKGO    ?= go tool ginkgo
+GOMOD2NIX ?= go tool gomod2nix
+NIX       ?= nix
 
 MODULES := docker github protofs
 
@@ -15,9 +17,12 @@ else
 TEST_FLAGS := --github-output --race --trace --coverprofile=cover.profile
 endif
 
-build: .make/build
+build:
+	$(NIX) build .#aferox .#aferox-docker .#aferox-github .#aferox-protofs
+
 test: .make/test
 tidy: go.sum ${MODULES:%=%/go.sum}
+deps: gomod2nix.toml ${MODULES:%=%/gomod2nix.toml}
 
 test_all:
 	$(GINKGO) run -r ./
@@ -27,6 +32,10 @@ test_all:
 
 go.sum: go.mod ${GO_SRC}
 	go mod tidy
+
+.PHONY: gomod2nix.toml ${MODULES:%=%/gomod2nix.toml}
+gomod2nix.toml ${MODULES:%=%/gomod2nix.toml}:
+	$(GOMOD2NIX) generate --dir ${@D}
 
 go.work: export GOWORK :=
 go.work: ${MODULES:%=%/go.mod}
@@ -42,10 +51,6 @@ go.work.sum: go.work
 
 .envrc: hack/example.envrc
 	cp $< $@
-
-.make/build: $(filter-out %_test.go,${GO_SRC})
-	go build ./...
-	@touch $@
 
 .make/test: $(filter-out ${MODULES:%=./%/%},${GO_SRC})
 	$(GINKGO) run ${TEST_FLAGS} $(sort $(dir $?))

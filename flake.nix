@@ -25,8 +25,8 @@
       imports = [
         inputs.treefmt-nix.flakeModule
         ./docker
-	./github
-	./protofs
+        ./github
+        ./protofs
       ];
 
       perSystem =
@@ -65,7 +65,7 @@
 
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
-	      goEnv
+              goEnv
               git
               gnumake
               go
