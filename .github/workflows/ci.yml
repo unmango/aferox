@@ -23,7 +23,8 @@ jobs:
           go-version-file: go.mod
           cache-dependency-path: go.sum
 
-      - run: make build
+      - run: go build ./...
+
       - run: |
           go tool ginkgo run -r \
           --github-output \
