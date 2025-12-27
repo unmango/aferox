@@ -22,9 +22,6 @@ schema = 3
   [mod."github.com/google/pprof"]
     version = "v0.0.0-20250923004556-9e5a51aed1e8"
     hash = "sha256-kZmrxARFnMPJ/vA6YjKB8RDYUrfoNtIT8aw/ikL5a6Y="
-  [mod."github.com/kr/pretty"]
-    version = "v0.3.1"
-    hash = "sha256-DlER7XM+xiaLjvebcIPiB12oVNjyZHuJHoRGITzzpKU="
   [mod."github.com/onsi/ginkgo/v2"]
     version = "v2.27.3"
     hash = "sha256-8rYXtDcKRStw+j1kXcAsMGxxRfszj3qRut1SxJHKI9k="
@@ -40,9 +37,6 @@ schema = 3
   [mod."github.com/stretchr/testify"]
     version = "v1.11.1"
     hash = "sha256-sWfjkuKJyDllDEtnM8sb/pdLzPQmUYWYtmeWz/5suUc="
-  [mod."go.uber.org/automaxprocs"]
-    version = "v1.6.0"
-    hash = "sha256-a/Agm+kM9x+VRo0CYyTL3ipUYv9Glrc4NeGSZJdpobA="
   [mod."go.yaml.in/yaml/v3"]
     version = "v3.0.4"
     hash = "sha256-NkGFiDPoCxbr3LFsI6OCygjjkY0rdmg5ggvVVwpyDQ4="

@@ -172,9 +172,6 @@ schema = 3
   [mod."go.opentelemetry.io/proto/otlp"]
     version = "v1.8.0"
     hash = "sha256-0Gn4MNxfbgv7zNxFyci6WaTeQA0ynMyXWKrIEEhN//o="
-  [mod."go.uber.org/automaxprocs"]
-    version = "v1.6.0"
-    hash = "sha256-a/Agm+kM9x+VRo0CYyTL3ipUYv9Glrc4NeGSZJdpobA="
   [mod."go.yaml.in/yaml/v3"]
     version = "v3.0.4"
     hash = "sha256-NkGFiDPoCxbr3LFsI6OCygjjkY0rdmg5ggvVVwpyDQ4="
