@@ -128,8 +128,8 @@ schema = 3
     version = "v0.3.0"
     hash = "sha256-FqgcX5fkI4udyzbGL9IlSd+r6WltLeF7lDbRGiISm3o="
   [mod."github.com/unmango/go"]
-    version = "v0.10.2"
-    hash = "sha256-VGyCQlsvTD2fab+y1SNx4ifxrkOaRBQRe5fFHNqwj+4="
+    version = "v0.10.3"
+    hash = "sha256-Yo8jjPznkFsmW5HtTl07ypQDBAeVZKrdFNmohok/McQ="
   [mod."github.com/xo/terminfo"]
     version = "v0.0.0-20220910002029-abceb7e1c41e"
     hash = "sha256-GyCDxxMQhXA3Pi/TsWXpA8cX5akEoZV7CFx4RO3rARU="
