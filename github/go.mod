@@ -1,6 +1,6 @@
 module github.com/unmango/aferox/github
 
-go 1.25.1
+go 1.25.4
 
 tool github.com/onsi/ginkgo/v2/ginkgo
 
