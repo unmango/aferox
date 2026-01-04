@@ -48,5 +48,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Leaving out docker until ./context exists on main
-      - run: nix build .#aferox .#aferox-github .#aferox-protofs
+      - run: nix flake check --all-systems
+      - run: nix build .#aferox
