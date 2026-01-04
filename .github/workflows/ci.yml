@@ -48,4 +48,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - run: nix flake check --all-systems
       - run: nix build .#aferox

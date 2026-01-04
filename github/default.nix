@@ -14,7 +14,7 @@
         nativeBuildInputs = [ pkgs.ginkgo ];
 
         # WIP
-        checkPhase = '''';
+        doCheck = false;
       };
     };
 }
