@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	ImageFromFs = image.FromFs
 	ImageToFs   = image.ToFs
 	LayerFromFs = layer.FromFs
 	LayerToFs   = layer.ToFs
