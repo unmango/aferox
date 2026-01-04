@@ -18,7 +18,11 @@ TEST_FLAGS := --github-output --race --trace --coverprofile=cover.profile
 endif
 
 build:
-	$(NIX) build .#aferox .#aferox-docker .#aferox-github .#aferox-protofs
+	$(NIX) build .#aferox \
+	.#aferox-containerregistry \
+	.#aferox-docker \
+	.#aferox-github \
+	.#aferox-protofs
 
 test: .make/test
 tidy: go.sum ${MODULES:%=%/go.sum}
