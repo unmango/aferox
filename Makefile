@@ -6,7 +6,7 @@ GINKGO    ?= go tool ginkgo
 GOMOD2NIX ?= go tool gomod2nix
 NIX       ?= nix
 
-MODULES := docker github protofs
+MODULES := containerregistry docker github protofs
 
 # GO_SRC != $(DEVCTL) list --go
 GO_SRC != find . -type f -path '*.go'
@@ -26,6 +26,13 @@ deps: gomod2nix.toml ${MODULES:%=%/gomod2nix.toml}
 
 test_all:
 	$(GINKGO) run -r ./
+
+import:
+	$(GOMOD2NIX) import
+	$(GOMOD2NIX) import --dir containerregistry
+	$(GOMOD2NIX) import --dir docker
+	$(GOMOD2NIX) import --dir github
+	$(GOMOD2NIX) import --dir protofs
 
 %/go.sum: %/go.mod ${GO_SRC}
 	go -C $* mod tidy
