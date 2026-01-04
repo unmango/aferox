@@ -1,4 +1,4 @@
-package ignore
+package gitignore
 
 import (
 	"bufio"

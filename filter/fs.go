@@ -9,11 +9,32 @@ import (
 	"github.com/spf13/afero"
 )
 
-type Predicate func(string) bool
+type (
+	Filter    func(string) error
+	Predicate func(string) bool
+)
+
+func FromFilter(base afero.Fs, filter Filter) afero.Fs {
+	return &Fs{src: base, filter: filter}
+}
+
+func FromPredicate(base afero.Fs, pred Predicate) afero.Fs {
+	return FromFilter(base, func(s string) error {
+		if pred(s) {
+			return nil
+		} else {
+			return syscall.ENOENT
+		}
+	})
+}
+
+func NewFs(base afero.Fs, predicate Predicate) afero.Fs {
+	return FromPredicate(base, predicate)
+}
 
 type Fs struct {
-	src  afero.Fs
-	pred Predicate
+	src    afero.Fs
+	filter Filter
 }
 
 // Chmod implements afero.Fs.
@@ -85,8 +106,8 @@ func (f *Fs) Open(name string) (afero.File, error) {
 	}
 
 	return &File{
-		file: file,
-		pred: f.pred,
+		file:   file,
+		filter: f.filter,
 	}, nil
 }
 
@@ -163,13 +184,9 @@ func (f *Fs) dirOrMatches(name string) error {
 }
 
 func (f *Fs) matchesName(name string) error {
-	if f.pred == nil || f.pred(name) {
+	if f.filter == nil {
 		return nil
 	} else {
-		return syscall.ENOENT
+		return f.filter(name)
 	}
-}
-
-func NewFs(src afero.Fs, predicate Predicate) afero.Fs {
-	return &Fs{src: src, pred: predicate}
 }

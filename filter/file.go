@@ -7,8 +7,8 @@ import (
 )
 
 type File struct {
-	file afero.File
-	pred Predicate
+	file   afero.File
+	filter Filter
 }
 
 // Close implements afero.File.
@@ -40,7 +40,7 @@ func (f *File) Readdir(count int) (res []fs.FileInfo, err error) {
 	}
 
 	for _, i := range infos {
-		if i.IsDir() || f.pred(i.Name()) {
+		if i.IsDir() || f.filter(i.Name()) == nil {
 			res = append(res, i)
 		}
 	}

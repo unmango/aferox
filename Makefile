@@ -6,7 +6,7 @@ GINKGO    ?= go tool ginkgo
 GOMOD2NIX ?= go tool gomod2nix
 NIX       ?= nix
 
-MODULES := containerregistry docker github ignore protofs
+MODULES := containerregistry docker github gitignore protofs
 
 # GO_SRC != $(DEVCTL) list --go
 GO_SRC != find . -type f -path '*.go'
@@ -22,6 +22,7 @@ build:
 	.#aferox-containerregistry \
 	.#aferox-docker \
 	.#aferox-github \
+	.#aferox-gitignore \
 	.#aferox-protofs \
 	--no-link
 
