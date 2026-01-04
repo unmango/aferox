@@ -40,6 +40,9 @@ schema = 3
   [mod."github.com/go-task/slim-sprig/v3"]
     version = "v3.0.0"
     hash = "sha256-vCCw4MXVBm33VNLXcOBccVDD1CSnzDvDdWB6w5FN1cA="
+  [mod."github.com/goccy/go-yaml"]
+    version = "v1.19.1"
+    hash = "sha256-zlT9y4wkvyv7RBv48jdJqOM2lrDMLrC6Z6hCl90c5hQ="
   [mod."github.com/google/go-cmp"]
     version = "v0.7.0"
     hash = "sha256-JbxZFBFGCh/Rj5XZ1vG94V2x7c18L8XKB0N9ZD5F2rM="

@@ -22,7 +22,8 @@ build:
 	.#aferox-containerregistry \
 	.#aferox-docker \
 	.#aferox-github \
-	.#aferox-protofs
+	.#aferox-protofs \
+	--no-link
 
 test: .make/test
 tidy: go.sum ${MODULES:%=%/go.sum}
