@@ -31,6 +31,9 @@ schema = 3
   [mod."github.com/charmbracelet/x/term"]
     version = "v0.2.1"
     hash = "sha256-VBkCZLI90PhMasftGw3403IqoV7d3E5WEGAIVrN5xQM="
+  [mod."github.com/davecgh/go-spew"]
+    version = "v1.1.2-0.20180830191138-d8f796af33cc"
+    hash = "sha256-fV9oI51xjHdOmEx6+dlq7Ku2Ag+m/bmbzPo6A4Y74qc="
   [mod."github.com/fsnotify/fsnotify"]
     version = "v1.9.0"
     hash = "sha256-WtpE1N6dpHwEvIub7Xp/CrWm0fd6PX7MKA4PV44rp2g="
@@ -91,6 +94,9 @@ schema = 3
   [mod."github.com/pelletier/go-toml/v2"]
     version = "v2.2.4"
     hash = "sha256-8qQIPldbsS5RO8v/FW/se3ZsAyvLzexiivzJCbGRg2Q="
+  [mod."github.com/pmezard/go-difflib"]
+    version = "v1.0.1-0.20181226105442-5d4384ee4fb2"
+    hash = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90="
   [mod."github.com/rivo/uniseg"]
     version = "v0.4.7"
     hash = "sha256-rDcdNYH6ZD8KouyyiZCUEy8JrjOQoAkxHBhugrfHjFo="
