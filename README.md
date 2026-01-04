@@ -6,6 +6,27 @@ The `aferox` packages expands on [`github.com/spf13/afero`](https://github.com/s
 
 [Go Doc](https://pkg.go.dev/github.com/unmango/aferox)
 
+## containerregistry
+
+The `containerregistry` package adds implementations of `afero.Fs` wrapping [github.com/google/go-containerregistry](https://github.com/google/go-containerregistry) `v1.Image` and `v1.Layer` abstractions.
+Currently readonly.
+
+```go
+img, _ := image.FromFs(afero.NewMemMapFs())
+fs, _ := image.ToFs(empty.Image)
+
+layer, _ = layer.FromFs(afero.NewMemMapFs())
+fs, _ := layer.ToFs(empty.Layer)
+```
+
+This package lives in a separate module to avoid adding a dependency on `go-containerregistry` to `aferox`.
+
+[Go Doc](https://pkg.go.dev/github.com/unmango/aferox/containerregistry)
+
+```shell
+go get github.com/unmango/aferox/containerregistry
+```
+
 ## github
 
 The `github` package adds multiple implementations of `afero.Fs` for interacting with the GitHub API as if it were a filesystem.
@@ -20,7 +41,7 @@ file, _ := fs.Open("https://github.com/unmango")
 file.Readdirnames(420)
 ```
 
-This package lives in a separate module to avoid adding a dependendy on GitHub to `aferox`.
+This package lives in a separate module to avoid adding a dependency on `go-github` to `aferox`.
 
 [Go Doc](https://pkg.go.dev/github.com/unmango/aferox/github)
 
@@ -62,7 +83,7 @@ client := client.NewClientWithOpts(client.FromEnv)
 fs := docker.NewFs(client, "my-container-id")
 ```
 
-This package lives in a separate module to avoid adding a dependency on docker to `aferox`.
+This package lives in a separate module to avoid adding a dependency on `docker` to `aferox`.
 
 [Go Doc](https://pkg.go.dev/github.com/unmango/aferox/docker)
 
