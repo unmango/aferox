@@ -12,11 +12,11 @@ The `containerregistry` package adds implementations of `afero.Fs` wrapping [git
 Currently readonly.
 
 ```go
-fs, err := image.FromFs(afero.NewMemMapFs())
-img, err := image.ToFs(empty.Image)
+img, _ := image.FromFs(afero.NewMemMapFs())
+fs, _ := image.ToFs(empty.Image)
 
-fs, err := layer.FromFs(afero.NewMemMapFs())
-img, err := layer.ToFs(empty.Layer)
+layer, _ = layer.FromFs(afero.NewMemMapFs())
+fs, _ := layer.ToFs(empty.Layer)
 ```
 
 This package lives in a separate module to avoid adding a dependency on `go-containerregistry` to `aferox`.
