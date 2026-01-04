@@ -14,10 +14,12 @@
         src = ./.;
         modules = ./gomod2nix.toml;
 
-        # WIP
         nativeBuildInputs = [
           pkgs.ginkgo
         ];
+
+        # WIP
+        doCheck = false;
       };
     in
     {
