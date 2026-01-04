@@ -1,6 +1,6 @@
 module github.com/unmango/aferox
 
-go 1.25.1
+go 1.25.4
 
 tool (
 	github.com/nix-community/gomod2nix

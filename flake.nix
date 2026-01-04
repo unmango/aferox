@@ -24,6 +24,7 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
+        ./containerregistry
         ./docker
         ./github
         ./protofs
@@ -67,6 +68,7 @@
             packages = with pkgs; [
               goEnv
               git
+              ginkgo
               gnumake
               go
               gomod2nix

@@ -31,7 +31,7 @@ jobs:
           --race \
           --trace \
           --coverprofile=cover.profile \
-          --skip-package docker,github,protofs
+          --skip-package containerregistry,docker,github,protofs
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -48,5 +48,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Leaving out docker until ./context exists on main
-      - run: nix build .#aferox .#aferox-github .#aferox-protofs
+      - run: nix flake check --all-systems
+      - run: nix build .#aferox

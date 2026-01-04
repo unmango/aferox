@@ -33,3 +33,14 @@ jobs:
           --github-output \
           --race \
           --trace
+
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v31.9.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: nix build .#aferox-github
