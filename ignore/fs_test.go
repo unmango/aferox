@@ -3,6 +3,7 @@ package ignore_test
 import (
 	"io/fs"
 	"os"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/spf13/afero"
+	"github.com/unmango/aferox/filter"
 	"github.com/unmango/aferox/ignore"
 )
 
@@ -20,193 +22,139 @@ func (s ignoreStub) MatchesPath(p string) bool {
 }
 
 var _ = Describe("Fs", func() {
-	It("should not allow chmod-ing a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+	When("a single file exists", func() {
+		var baseFs afero.Fs
 
-		err = ignored.Chmod("test.txt", os.ModeAppend)
+		BeforeEach(func() {
+			baseFs = afero.NewMemMapFs()
+			err := afero.WriteFile(baseFs, "test.txt", []byte("testing"), os.ModePerm)
+			Expect(err).NotTo(HaveOccurred())
+		})
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+		When("the file is ignored", func() {
+			var ignoreFs afero.Fs
 
-	It("should allow chmod-ing a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
+			BeforeEach(func() {
+				ignoreFs = ignore.NewFs(baseFs, ignoreStub("test.txt"))
+			})
 
-		err = ignored.Chmod("test.txt", os.ModeAppend)
+			It("should not allow chmod-ing a filtered file", func() {
+				err := ignoreFs.Chmod("test.txt", os.ModeAppend)
 
-		Expect(err).NotTo(HaveOccurred())
-	})
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-	It("should not allow chown-ing a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+			It("should not allow chown-ing a filtered file", func() {
+				err := ignoreFs.Chown("test.txt", 1001, 1001)
 
-		err = ignored.Chown("test.txt", 1001, 1001)
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+			It("should not allow chtimes-ing a filtered file", func() {
+				err := ignoreFs.Chtimes("test.txt", time.Now(), time.Now())
 
-	It("should allow chown-ing a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-		err = ignored.Chown("test.txt", 1001, 1001)
+			It("should not allow creating a filtered file", func() {
+				_, err := ignoreFs.Create("test.txt")
 
-		Expect(err).NotTo(HaveOccurred())
-	})
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-	It("should not allow chtimes-ing a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+			It("should not allow opening a filtered file", func() {
+				_, err := ignoreFs.Open("test.txt")
 
-		err = ignored.Chtimes("test.txt", time.Now(), time.Now())
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+			It("should not allow open-file-ing a filtered file", func() {
+				_, err := ignoreFs.OpenFile("test.txt", 69, os.ModeAppend)
 
-	It("should allow chtimes-ing a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-		err = ignored.Chtimes("test.txt", time.Now(), time.Now())
+			It("should not allow removing a filtered file", func() {
+				err := ignoreFs.Remove("test.txt")
 
-		Expect(err).NotTo(HaveOccurred())
-	})
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
 
-	It("should not allow creating a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+			It("should not allow stat-ing a filtered file", func() {
+				_, err := ignoreFs.Stat("test.txt")
 
-		_, err := ignored.Create("test.txt")
+				Expect(err).To(MatchError(syscall.ENOENT))
+			})
+		})
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+		When("the file is not ignored", func() {
+			var filtered afero.Fs
 
-	It("should allow creating a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
+			BeforeEach(func() {
+				filtered = ignore.NewFs(baseFs, ignoreStub("not-test.txt"))
+			})
 
-		_, err := ignored.Create("test.txt")
+			It("should allow chmod-ing a non-filtered file", func() {
+				err := filtered.Chmod("test.txt", os.ModeAppend)
 
-		Expect(err).NotTo(HaveOccurred())
-	})
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-	It("should include the source filesystem name", func() {
-		fs := ignore.NewFs(afero.NewMemMapFs(), nil)
+			It("should allow chown-ing a non-filtered file", func() {
+				err := filtered.Chown("test.txt", 1001, 1001)
 
-		Expect(fs.Name()).To(Equal("ignore: MemMapFS"))
-	})
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-	It("should not allow opening a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+			It("should allow chtimes-ing a non-filtered file", func() {
+				err := filtered.Chtimes("test.txt", time.Now(), time.Now())
 
-		_, err = ignored.Open("test.txt")
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+			It("should allow creating a non-filtered file", func() {
+				_, err := filtered.Create("test.txt")
 
-	It("should allow opening a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-		_, err = ignored.Open("test.txt")
+			It("should include the source filesystem name", func() {
+				Expect(filtered.Name()).To(Equal("Filter: MemMapFS"))
+			})
 
-		Expect(err).NotTo(HaveOccurred())
-	})
+			It("should allow opening a non-filtered file", func() {
+				_, err := filtered.Open("test.txt")
 
-	It("should not allow open-file-ing a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-		_, err = ignored.OpenFile("test.txt", 69, os.ModeAppend)
+			It("should allow open-file-ing a non-filtered file", func() {
+				_, err := filtered.OpenFile("test.txt", 69, os.ModeAppend)
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-	It("should allow open-file-ing a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
+			It("should allow removing a non-filtered file", func() {
+				err := filtered.Remove("test.txt")
 
-		_, err = ignored.OpenFile("test.txt", 69, os.ModeAppend)
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-		Expect(err).NotTo(HaveOccurred())
-	})
+			It("should allow removing a directory", func() {
+				err := baseFs.Mkdir("test", os.ModeDir)
+				Expect(err).NotTo(HaveOccurred())
 
-	It("should not allow removing a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
+				err = filtered.Remove("test")
 
-		err = ignored.Remove("test.txt")
+				Expect(err).NotTo(HaveOccurred())
+			})
 
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
+			It("should allow stat-ing a non-filtered file", func() {
+				_, err := filtered.Stat("test.txt")
 
-	It("should allow removing a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
-
-		err = ignored.Remove("test.txt")
-
-		Expect(err).NotTo(HaveOccurred())
-	})
-
-	It("should allow removing a directory", func() {
-		fs := afero.NewMemMapFs()
-		err := fs.Mkdir("test", os.ModeDir)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
-
-		err = ignored.Remove("test")
-
-		Expect(err).NotTo(HaveOccurred())
-	})
-
-	It("should not allow stat-ing a ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("not-test.txt"))
-
-		_, err = ignored.Stat("test.txt")
-
-		Expect(err).To(MatchError(syscall.ENOENT))
-	})
-
-	It("should allow stat-ing a non-ignored file", func() {
-		fs := afero.NewMemMapFs()
-		err := afero.WriteFile(fs, "test.txt", []byte("testing"), os.ModePerm)
-		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(fs, ignoreStub("test.txt"))
-
-		_, err = ignored.Stat("test.txt")
-
-		Expect(err).NotTo(HaveOccurred())
+				Expect(err).NotTo(HaveOccurred())
+			})
+		})
 	})
 
 	It("should walk properly", func() {
@@ -214,10 +162,12 @@ var _ = Describe("Fs", func() {
 		Expect(base.Mkdir("test", os.ModePerm)).To(Succeed())
 		err := afero.WriteFile(base, "test/file.txt", []byte("testing"), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
-		ignored := ignore.NewFs(base, ignoreStub("test/file.txt"))
+		filtered := filter.NewFs(base, func(s string) bool {
+			return filepath.Ext(s) != ".txt"
+		})
 		paths := []string{}
 
-		err = afero.Walk(ignored, "", func(path string, info fs.FileInfo, err error) error {
+		err = afero.Walk(filtered, "", func(path string, info fs.FileInfo, err error) error {
 			paths = append(paths, path)
 			return err
 		})
