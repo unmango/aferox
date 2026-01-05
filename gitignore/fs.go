@@ -38,12 +38,12 @@ func NewFsFromGitIgnoreReader(base afero.Fs, reader io.Reader) (afero.Fs, error)
 }
 
 func NewFsFromGitIgnoreFile(base afero.Fs, path string) (afero.Fs, error) {
-	if f, err := base.Open(path); err != nil {
+	f, err := base.Open(path)
+	if err != nil {
 		return nil, fmt.Errorf("opening ignore file: %w", err)
-	} else {
-		defer f.Close()
-		return NewFsFromGitIgnoreReader(base, f)
 	}
+	defer f.Close()
+	return NewFsFromGitIgnoreReader(base, f)
 }
 
 func OpenDefaultGitIgnore(base afero.Fs) (afero.Fs, error) {
