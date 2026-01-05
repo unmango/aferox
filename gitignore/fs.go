@@ -21,7 +21,9 @@ func NewFsFromGitIgnoreLines(base afero.Fs, lines ...string) afero.Fs {
 }
 
 func NewFsFromIgnore(base afero.Fs, ignore Ignore) afero.Fs {
-	return filter.NewFs(base, not(ignore.MatchesPath))
+	return filter.NewFs(base, func(s string) bool {
+		return !ignore.MatchesPath(s)
+	})
 }
 
 func NewFsFromGitIgnoreReader(base afero.Fs, reader io.Reader) (afero.Fs, error) {
@@ -48,11 +50,4 @@ func NewFsFromGitIgnoreFile(base afero.Fs, path string) (afero.Fs, error) {
 
 func OpenDefaultGitIgnore(base afero.Fs) (afero.Fs, error) {
 	return NewFsFromGitIgnoreFile(base, DefaultFile)
-}
-
-// This is entirely unnecessary
-func not(fn func(string) bool) func(string) bool {
-	return func(s string) bool {
-		return !fn(s)
-	}
 }
