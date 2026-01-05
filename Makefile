@@ -6,7 +6,7 @@ GINKGO    ?= go tool ginkgo
 GOMOD2NIX ?= go tool gomod2nix
 NIX       ?= nix
 
-MODULES := containerregistry docker github protofs
+MODULES := containerregistry docker github gitignore protofs
 
 # GO_SRC != $(DEVCTL) list --go
 GO_SRC != find . -type f -path '*.go'
@@ -18,12 +18,7 @@ TEST_FLAGS := --github-output --race --trace --coverprofile=cover.profile
 endif
 
 build:
-	$(NIX) build .#aferox \
-	.#aferox-containerregistry \
-	.#aferox-docker \
-	.#aferox-github \
-	.#aferox-protofs \
-	--no-link
+	$(NIX) build .#aferox ${MODULES:%=.#aferox-%} --no-link
 
 test: .make/test
 tidy: go.sum ${MODULES:%=%/go.sum}
@@ -37,6 +32,7 @@ import:
 	$(GOMOD2NIX) import --dir containerregistry
 	$(GOMOD2NIX) import --dir docker
 	$(GOMOD2NIX) import --dir github
+	$(GOMOD2NIX) import --dir gitignore
 	$(GOMOD2NIX) import --dir protofs
 
 %/go.sum: %/go.mod ${GO_SRC}

@@ -27,6 +27,7 @@
         ./containerregistry
         ./docker
         ./github
+        ./gitignore
         ./protofs
       ];
 
