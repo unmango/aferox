@@ -11,7 +11,7 @@
     {
       packages.aferox-gitignore = buildGoApplication {
         pname = "aferox-gitignore";
-        version = "0.0.3";
+        version = "0.0.1";
         src = ./.;
         modules = ./gomod2nix.toml;
 
