@@ -177,7 +177,7 @@ var _ = Describe("Single", func() {
 			baseFs := afero.NewMemMapFs()
 			_, err := baseFs.Create("test.txt")
 			Expect(err).NotTo(HaveOccurred())
-			
+
 			fs := &failingOpenFs{Fs: baseFs}
 
 			_, err = aferox.OpenFirst(fs, "")

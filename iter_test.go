@@ -87,9 +87,6 @@ var _ = Describe("Iter", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		filter := func(err error) error {
-			if err != nil {
-				// Just return nil to filter out errors
-			}
 			return nil
 		}
 
