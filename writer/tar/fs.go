@@ -116,12 +116,12 @@ func (f *Fs) Stat(name string) (os.FileInfo, error) {
 //
 // Example:
 //
-//   tw := tar.NewWriter(dst)
-//   defer tw.Close()
+//	tw := tar.NewWriter(dst)
+//	defer tw.Close()
 //
-//   fs := NewFs(tw)
-//   // Use any afero helpers with fs, for example:
-//   //   afero.WriteFile(fs, "path/to/file.txt", []byte("data"), 0o644)
+//	fs := NewFs(tw)
+//	// Use any afero helpers with fs, for example:
+//	//   afero.WriteFile(fs, "path/to/file.txt", []byte("data"), 0o644)
 func NewFs(w *tar.Writer) afero.Fs {
 	return &Fs{
 		m: &sync.Mutex{},
