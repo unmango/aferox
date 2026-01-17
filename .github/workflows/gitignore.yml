@@ -1,4 +1,4 @@
-name: go-containerregistry
+name: gitignore
 
 on:
   push:
