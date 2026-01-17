@@ -46,7 +46,7 @@ jobs:
 
       - uses: cachix/install-nix-action@v31.9.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: nix flake check --all-systems
       - run: nix build .#aferox

@@ -2,16 +2,15 @@ name: go-containerregistry
 
 on:
   push:
-    # For code coverage reports
     branches: [main]
     paths:
-      - .github/workflows/containerregistry.yml
-      - containerregistry/*
+      - .github/workflows/gitignore.yml
+      - gitignore/*
   pull_request:
     branches: [main]
     paths:
-      - .github/workflows/containerregistry.yml
-      - containerregistry/*
+      - .github/workflows/gitignore.yml
+      - gitignore/*
 
 permissions:
   contents: read
@@ -25,11 +24,11 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version-file: containerregistry/go.mod
-          cache-dependency-path: containerregistry/go.sum
+          go-version-file: gitignore/go.mod
+          cache-dependency-path: gitignore/go.sum
 
       - run: |
-          go -C containerregistry tool ginkgo run -r \
+          go -C gitignore tool ginkgo run -r \
           --github-output \
           --race \
           --trace
@@ -43,4 +42,4 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: nix build .#aferox-containerregistry
+      - run: nix build .#aferox-gitignore
