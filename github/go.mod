@@ -7,6 +7,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 require (
 	github.com/charmbracelet/log v0.4.2
 	github.com/google/go-github/v80 v80.0.0
+	github.com/google/go-github/v81 v81.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.27.5
 	github.com/onsi/gomega v1.38.3
