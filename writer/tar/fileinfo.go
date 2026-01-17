@@ -34,10 +34,10 @@ func (f *FileInfo) Name() string {
 
 // Size implements fs.FileInfo.
 func (f *FileInfo) Size() int64 {
-	return -1
+	return 0
 }
 
 // Sys implements fs.FileInfo.
 func (f *FileInfo) Sys() any {
-	return f.w
+	return nil
 }

@@ -9,6 +9,16 @@ import (
 	"github.com/spf13/afero"
 )
 
+// Fs implements [afero.Fs] as a write-only filesystem backed by an archive/tar.Writer.
+//
+// It is intended for creating tar archive entries via standard filesystem-style calls
+// such as Create and OpenFile. Read, stat-based modification, and mutating operations
+// (for example Chmod, Chown, Chtimes, Remove, RemoveAll, and Rename) are not supported
+// on the underlying tar stream and will return appropriate permission or read-only
+// filesystem errors (for example syscall.EPERM or syscall.EROFS).
+//
+// Callers should treat Fs as an append-only view of a tar archive and should not expect
+// to be able to read back or modify previously written entries through this interface.
 type Fs struct {
 	w *tar.Writer
 }
@@ -30,7 +40,7 @@ func (f *Fs) Chtimes(name string, atime time.Time, mtime time.Time) error {
 
 // Create implements [afero.Fs].
 func (f *Fs) Create(name string) (afero.File, error) {
-	return NewFile(name, f.w, 0), nil
+	return NewFile(name, f.w, 0644), nil
 }
 
 // Mkdir implements [afero.Fs].
@@ -50,7 +60,9 @@ func (f *Fs) Name() string {
 
 // Open implements [afero.Fs].
 func (f *Fs) Open(name string) (afero.File, error) {
-	return NewFile(name, f.w, 0), nil
+	// This filesystem is write-only (backed by tar.Writer), so opening files
+	// for reading is not supported.
+	return nil, syscall.EROFS
 }
 
 // OpenFile implements [afero.Fs].
@@ -78,6 +90,24 @@ func (f *Fs) Stat(name string) (os.FileInfo, error) {
 	return &FileInfo{name: name, w: f.w}, nil
 }
 
+// NewFs returns an [afero.Fs] implementation that writes its contents to the
+// provided [tar.Writer]. The returned filesystem is write-only and exposes a
+// subset of operations that add files and directories to the underlying tar
+// stream.
+//
+// The caller retains ownership of the tar.Writer: NewFs does not close or
+// flush the writer, and it does not perform any synchronization. The caller
+// is responsible for calling Close on the tar.Writer when all filesystem
+// operations are complete.
+//
+// Example:
+//
+//   tw := tar.NewWriter(dst)
+//   defer tw.Close()
+//
+//   fs := NewFs(tw)
+//   // Use any afero helpers with fs, for example:
+//   //   afero.WriteFile(fs, "path/to/file.txt", []byte("data"), 0o644)
 func NewFs(w *tar.Writer) afero.Fs {
 	return &Fs{w: w}
 }
