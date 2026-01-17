@@ -23,11 +23,11 @@ schema = 3
     version = "v0.0.0-20251213031049-b05bdaca462f"
     hash = "sha256-gvYwykO5kX7UUr0uV+KleyvqLnu0TylnLimaYKCDMJw="
   [mod."github.com/onsi/ginkgo/v2"]
-    version = "v2.27.3"
-    hash = "sha256-8rYXtDcKRStw+j1kXcAsMGxxRfszj3qRut1SxJHKI9k="
+    version = "v2.27.5"
+    hash = "sha256-4YtMCQDR+odfRReIah0jHLXFdG8UyX+EOaDT00XpMr0="
   [mod."github.com/onsi/gomega"]
-    version = "v1.38.3"
-    hash = "sha256-dz6Q5L0Rxu/rhdLRz5iCrO+kpTTRFa09yGTBqWi5Bvs="
+    version = "v1.39.0"
+    hash = "sha256-in2eEUjcDC3JGDSAQxBI/mWdT0E2X1yCBKoGXemlWaE="
   [mod."github.com/pmezard/go-difflib"]
     version = "v1.0.1-0.20181226105442-5d4384ee4fb2"
     hash = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90="

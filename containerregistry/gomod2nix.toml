@@ -44,11 +44,11 @@ schema = 3
     version = "v1.1.0"
     hash = "sha256-oduBKXHAQG8X6aqLEpqZHs5DOKe84u6WkBwi4W6cv3k="
   [mod."github.com/onsi/ginkgo/v2"]
-    version = "v2.27.3"
-    hash = "sha256-8rYXtDcKRStw+j1kXcAsMGxxRfszj3qRut1SxJHKI9k="
+    version = "v2.27.5"
+    hash = "sha256-4YtMCQDR+odfRReIah0jHLXFdG8UyX+EOaDT00XpMr0="
   [mod."github.com/onsi/gomega"]
-    version = "v1.38.3"
-    hash = "sha256-dz6Q5L0Rxu/rhdLRz5iCrO+kpTTRFa09yGTBqWi5Bvs="
+    version = "v1.39.0"
+    hash = "sha256-in2eEUjcDC3JGDSAQxBI/mWdT0E2X1yCBKoGXemlWaE="
   [mod."github.com/opencontainers/go-digest"]
     version = "v1.0.0"
     hash = "sha256-cfVDjHyWItmUGZ2dzQhCHgmOmou8v7N+itDkLZVkqkQ="
