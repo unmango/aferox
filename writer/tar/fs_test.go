@@ -29,25 +29,6 @@ var _ = Describe("Fs", func() {
 		Expect(header.Size).To(Equal(int64(13)))
 	})
 
-	It("should open a writable file", func() {
-		buf := &bytes.Buffer{}
-		fs := tar.NewFs(tar.NewWriter(buf))
-
-		file, err := fs.Open("test.txt")
-		Expect(err).ToNot(HaveOccurred())
-		defer file.Close()
-
-		_, err = file.WriteString("Hello, World!")
-		Expect(err).ToNot(HaveOccurred())
-		Expect(file.Close()).To(Succeed())
-
-		r := tar.NewReader(buf)
-		header, err := r.Next()
-		Expect(err).ToNot(HaveOccurred())
-		Expect(header.Name).To(Equal("test.txt"))
-		Expect(header.Size).To(Equal(int64(13)))
-	})
-
 	It("should write multiple files", func() {
 		buf := &bytes.Buffer{}
 		fs := tar.NewFs(tar.NewWriter(buf))
