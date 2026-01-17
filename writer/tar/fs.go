@@ -2,7 +2,9 @@ package tar
 
 import (
 	"archive/tar"
+	"fmt"
 	"os"
+	"sync"
 	"syscall"
 	"time"
 
@@ -20,6 +22,7 @@ import (
 // Callers should treat Fs as an append-only view of a tar archive and should not expect
 // to be able to read back or modify previously written entries through this interface.
 type Fs struct {
+	m *sync.Mutex
 	w *tar.Writer
 }
 
@@ -40,17 +43,28 @@ func (f *Fs) Chtimes(name string, atime time.Time, mtime time.Time) error {
 
 // Create implements [afero.Fs].
 func (f *Fs) Create(name string) (afero.File, error) {
-	return NewFile(name, f.w, 0644), nil
+	return newFile(name, f.w, f.m, 0644), nil
 }
 
 // Mkdir implements [afero.Fs].
 func (f *Fs) Mkdir(name string, perm os.FileMode) error {
+	f.m.Lock()
+	defer f.m.Unlock()
+
+	if err := f.w.WriteHeader(&tar.Header{
+		Typeflag: tar.TypeDir,
+		Name:     name,
+		Mode:     int64(perm),
+	}); err != nil {
+		return fmt.Errorf("writing header: %w", err)
+	}
+
 	return nil
 }
 
 // MkdirAll implements [afero.Fs].
 func (f *Fs) MkdirAll(path string, perm os.FileMode) error {
-	return nil
+	return f.Mkdir(path, perm)
 }
 
 // Name implements [afero.Fs].
@@ -67,7 +81,7 @@ func (f *Fs) Open(name string) (afero.File, error) {
 
 // OpenFile implements [afero.Fs].
 func (f *Fs) OpenFile(name string, flag int, perm os.FileMode) (afero.File, error) {
-	return NewFile(name, f.w, perm), nil
+	return newFile(name, f.w, f.m, perm), nil
 }
 
 // Remove implements [afero.Fs].
@@ -109,5 +123,8 @@ func (f *Fs) Stat(name string) (os.FileInfo, error) {
 //   // Use any afero helpers with fs, for example:
 //   //   afero.WriteFile(fs, "path/to/file.txt", []byte("data"), 0o644)
 func NewFs(w *tar.Writer) afero.Fs {
-	return &Fs{w: w}
+	return &Fs{
+		m: &sync.Mutex{},
+		w: w,
+	}
 }

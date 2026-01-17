@@ -12,24 +12,31 @@ import (
 
 type File struct {
 	name string
-	w    *tar.Writer
-	buf  *bytes.Buffer
 	perm os.FileMode
 
+	m   *sync.Mutex
+	w   *tar.Writer
+	buf *bytes.Buffer
+
+	err  error
 	once *sync.Once
 }
 
-func NewFile(name string, w *tar.Writer, perm os.FileMode) *File {
+func newFile(name string, w *tar.Writer, m *sync.Mutex, perm os.FileMode) *File {
 	return &File{
 		name: name,
+		perm: perm,
+		m:    m,
 		w:    w,
 		buf:  &bytes.Buffer{},
-		perm: perm,
 		once: &sync.Once{},
 	}
 }
 
 func (f *File) flush() error {
+	f.m.Lock()
+	defer f.m.Unlock()
+
 	if err := f.w.WriteHeader(&tar.Header{
 		Name:     f.name,
 		Size:     int64(f.buf.Len()),
@@ -48,12 +55,11 @@ func (f *File) flush() error {
 
 // Close implements [afero.File].
 func (f *File) Close() error {
-	var err error
 	f.once.Do(func() {
-		err = f.flush()
+		f.err = f.flush()
 	})
 
-	return err
+	return f.err
 }
 
 // Name implements [afero.File].
