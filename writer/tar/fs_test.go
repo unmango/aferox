@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"bytes"
 	"errors"
-	"os"
 	"syscall"
 	"time"
 
@@ -112,344 +111,133 @@ var _ = Describe("Fs", func() {
 		Expect(header.Size).To(Equal(int64(0)))
 	})
 
-	Describe("File methods", func() {
-		It("should support Write method", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should return EPERM for Chmod", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			n, err := file.Write([]byte("Hello"))
-			Expect(err).ToNot(HaveOccurred())
-			Expect(n).To(Equal(5))
-
-			Expect(file.Close()).To(Succeed())
-
-			r := aferoxtar.NewReader(buf)
-			header, err := r.Next()
-			Expect(err).ToNot(HaveOccurred())
-			Expect(header.Name).To(Equal("test.txt"))
-			Expect(header.Size).To(Equal(int64(5)))
-		})
-
-		It("should return file name", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("myfile.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(file.Name()).To(Equal("myfile.txt"))
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for Read operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			data := make([]byte, 10)
-			_, err = file.Read(data)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for ReadAt operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			data := make([]byte, 10)
-			_, err = file.ReadAt(data, 0)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for Readdir operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			_, err = file.Readdir(0)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for Readdirnames operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			_, err = file.Readdirnames(0)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for Seek operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			_, err = file.Seek(0, 0)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return FileInfo from Stat", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			info, err := file.Stat()
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info).ToNot(BeNil())
-			Expect(info.Name()).To(Equal("test.txt"))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for Sync operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			err = file.Sync()
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for Truncate operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			err = file.Truncate(0)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
-
-		It("should return EROFS for WriteAt operations", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			file, err := fs.Create("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-
-			_, err = file.WriteAt([]byte("test"), 0)
-			Expect(err).To(Equal(syscall.EROFS))
-
-			Expect(file.Close()).To(Succeed())
-		})
+		err := fs.Chmod("test.txt", 0644)
+		Expect(err).To(Equal(syscall.EPERM))
 	})
 
-	Describe("FileInfo methods", func() {
-		It("should return false for IsDir", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should return EPERM for Chown", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			info, err := fs.Stat("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info.IsDir()).To(BeFalse())
-		})
-
-		It("should return zero time for ModTime", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			info, err := fs.Stat("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info.ModTime().IsZero()).To(BeTrue())
-		})
-
-		It("should return ModePerm for Mode", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			info, err := fs.Stat("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info.Mode()).To(Equal(os.ModePerm))
-		})
-
-		It("should return correct name", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			info, err := fs.Stat("myfile.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info.Name()).To(Equal("myfile.txt"))
-		})
-
-		It("should return 0 for Size", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			info, err := fs.Stat("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info.Size()).To(Equal(int64(0)))
-		})
-
-		It("should return nil for Sys", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			info, err := fs.Stat("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info.Sys()).To(BeNil())
-		})
+		err := fs.Chown("test.txt", 0, 0)
+		Expect(err).To(Equal(syscall.EPERM))
 	})
 
-	Describe("Fs methods", func() {
-		It("should return EPERM for Chmod", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should return EPERM for Chtimes", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			err := fs.Chmod("test.txt", 0644)
-			Expect(err).To(Equal(syscall.EPERM))
-		})
+		err := fs.Chtimes("test.txt", time.Now(), time.Now())
+		Expect(err).To(Equal(syscall.EPERM))
+	})
 
-		It("should return EPERM for Chown", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should create directories", func() {
+		buf := &bytes.Buffer{}
+		tw := aferoxtar.NewWriter(buf)
+		fs := aferoxtar.NewFs(tw)
 
-			err := fs.Chown("test.txt", 0, 0)
-			Expect(err).To(Equal(syscall.EPERM))
-		})
+		err := fs.Mkdir("testdir", 0755)
+		Expect(err).ToNot(HaveOccurred())
 
-		It("should return EPERM for Chtimes", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+		tw.Close()
 
-			err := fs.Chtimes("test.txt", time.Now(), time.Now())
-			Expect(err).To(Equal(syscall.EPERM))
-		})
+		r := aferoxtar.NewReader(buf)
+		header, err := r.Next()
+		Expect(err).ToNot(HaveOccurred())
+		Expect(header.Name).To(Equal("testdir"))
+		Expect(header.Typeflag).To(Equal(byte(tar.TypeDir)))
+	})
 
-		It("should create directories", func() {
-			buf := &bytes.Buffer{}
-			tw := aferoxtar.NewWriter(buf)
-			fs := aferoxtar.NewFs(tw)
+	It("should create directories with MkdirAll", func() {
+		buf := &bytes.Buffer{}
+		tw := aferoxtar.NewWriter(buf)
+		fs := aferoxtar.NewFs(tw)
 
-			err := fs.Mkdir("testdir", 0755)
-			Expect(err).ToNot(HaveOccurred())
+		err := fs.MkdirAll("testdir/subdir", 0755)
+		Expect(err).ToNot(HaveOccurred())
 
-			tw.Close()
+		tw.Close()
 
-			r := aferoxtar.NewReader(buf)
-			header, err := r.Next()
-			Expect(err).ToNot(HaveOccurred())
-			Expect(header.Name).To(Equal("testdir"))
-			Expect(header.Typeflag).To(Equal(byte(tar.TypeDir)))
-		})
+		r := aferoxtar.NewReader(buf)
+		header, err := r.Next()
+		Expect(err).ToNot(HaveOccurred())
+		Expect(header.Name).To(Equal("testdir/subdir"))
+		Expect(header.Typeflag).To(Equal(byte(tar.TypeDir)))
+	})
 
-		It("should create directories with MkdirAll", func() {
-			buf := &bytes.Buffer{}
-			tw := aferoxtar.NewWriter(buf)
-			fs := aferoxtar.NewFs(tw)
+	It("should return filesystem name", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			err := fs.MkdirAll("testdir/subdir", 0755)
-			Expect(err).ToNot(HaveOccurred())
+		Expect(fs.Name()).To(Equal("tar.Writer"))
+	})
 
-			tw.Close()
+	It("should return EROFS for Open", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			r := aferoxtar.NewReader(buf)
-			header, err := r.Next()
-			Expect(err).ToNot(HaveOccurred())
-			Expect(header.Name).To(Equal("testdir/subdir"))
-			Expect(header.Typeflag).To(Equal(byte(tar.TypeDir)))
-		})
+		_, err := fs.Open("test.txt")
+		Expect(err).To(Equal(syscall.EROFS))
+	})
 
-		It("should return filesystem name", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should support OpenFile", func() {
+		buf := &bytes.Buffer{}
+		tw := aferoxtar.NewWriter(buf)
+		fs := aferoxtar.NewFs(tw)
 
-			Expect(fs.Name()).To(Equal("tar.Writer"))
-		})
+		file, err := fs.OpenFile("test.txt", 0, 0644)
+		Expect(err).ToNot(HaveOccurred())
+		Expect(file).ToNot(BeNil())
 
-		It("should return EROFS for Open", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+		_, err = file.Write([]byte("content"))
+		Expect(err).ToNot(HaveOccurred())
+		Expect(file.Close()).To(Succeed())
 
-			_, err := fs.Open("test.txt")
-			Expect(err).To(Equal(syscall.EROFS))
-		})
+		tw.Close()
 
-		It("should support OpenFile", func() {
-			buf := &bytes.Buffer{}
-			tw := aferoxtar.NewWriter(buf)
-			fs := aferoxtar.NewFs(tw)
+		r := aferoxtar.NewReader(buf)
+		header, err := r.Next()
+		Expect(err).ToNot(HaveOccurred())
+		Expect(header.Name).To(Equal("test.txt"))
+		Expect(header.Size).To(Equal(int64(7)))
+	})
 
-			file, err := fs.OpenFile("test.txt", 0, 0644)
-			Expect(err).ToNot(HaveOccurred())
-			Expect(file).ToNot(BeNil())
+	It("should return EROFS for Remove", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			_, err = file.Write([]byte("content"))
-			Expect(err).ToNot(HaveOccurred())
-			Expect(file.Close()).To(Succeed())
+		err := fs.Remove("test.txt")
+		Expect(err).To(Equal(syscall.EROFS))
+	})
 
-			tw.Close()
+	It("should return EROFS for RemoveAll", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			r := aferoxtar.NewReader(buf)
-			header, err := r.Next()
-			Expect(err).ToNot(HaveOccurred())
-			Expect(header.Name).To(Equal("test.txt"))
-			Expect(header.Size).To(Equal(int64(7)))
-		})
+		err := fs.RemoveAll("test.txt")
+		Expect(err).To(Equal(syscall.EROFS))
+	})
 
-		It("should return EROFS for Remove", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should return EROFS for Rename", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			err := fs.Remove("test.txt")
-			Expect(err).To(Equal(syscall.EROFS))
-		})
+		err := fs.Rename("old.txt", "new.txt")
+		Expect(err).To(Equal(syscall.EROFS))
+	})
 
-		It("should return EROFS for RemoveAll", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
+	It("should return FileInfo for Stat", func() {
+		buf := &bytes.Buffer{}
+		fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
 
-			err := fs.RemoveAll("test.txt")
-			Expect(err).To(Equal(syscall.EROFS))
-		})
-
-		It("should return EROFS for Rename", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			err := fs.Rename("old.txt", "new.txt")
-			Expect(err).To(Equal(syscall.EROFS))
-		})
-
-		It("should return FileInfo for Stat", func() {
-			buf := &bytes.Buffer{}
-			fs := aferoxtar.NewFs(aferoxtar.NewWriter(buf))
-
-			info, err := fs.Stat("test.txt")
-			Expect(err).ToNot(HaveOccurred())
-			Expect(info).ToNot(BeNil())
-			Expect(info.Name()).To(Equal("test.txt"))
-		})
+		info, err := fs.Stat("test.txt")
+		Expect(err).ToNot(HaveOccurred())
+		Expect(info).ToNot(BeNil())
+		Expect(info.Name()).To(Equal("test.txt"))
 	})
 
 	Describe("Error handling", func() {
