@@ -4,8 +4,8 @@ import (
 	"io/fs"
 
 	"github.com/spf13/afero"
+	"github.com/unmango/go/fopt"
 	"github.com/unmango/go/iter"
-	"github.com/unmango/go/option"
 )
 
 type ErrFilter func(error) error
@@ -34,7 +34,7 @@ func FilterErrors(filter ErrFilter) IterOption {
 
 func Iter(fsys afero.Fs, root string, options ...IterOption) iter.Seq3[string, fs.FileInfo, error] {
 	opts := iterOptions{}
-	option.ApplyAll(&opts, options)
+	fopt.ApplyAll(&opts, options)
 
 	return func(yield func(string, fs.FileInfo, error) bool) {
 		done := false

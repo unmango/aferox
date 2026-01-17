@@ -76,6 +76,14 @@ var _ = Describe("Single", func() {
 				Expect(err).To(HaveOccurred())
 			})
 		})
+
+		It("should return error when walking non-existent path", func() {
+			fs := afero.NewReadOnlyFs(afero.NewMemMapFs())
+
+			_, err := aferox.StatSingle(fs, "nonexistent")
+
+			Expect(err).To(HaveOccurred())
+		})
 	})
 
 	Describe("OpenSingle", func() {
@@ -142,6 +150,31 @@ var _ = Describe("Single", func() {
 
 				Expect(err).To(HaveOccurred())
 			})
+		})
+
+		It("should return error when walking non-existent path", func() {
+			fs := afero.NewReadOnlyFs(afero.NewMemMapFs())
+
+			_, err := aferox.OpenSingle(fs, "nonexistent")
+
+			Expect(err).To(HaveOccurred())
+		})
+	})
+
+	Describe("errSingle", func() {
+		It("should format error message correctly", func() {
+			fsys := afero.NewMemMapFs()
+			_, err := fsys.Create("file1.txt")
+			Expect(err).NotTo(HaveOccurred())
+			_, err = fsys.Create("file2.txt")
+			Expect(err).NotTo(HaveOccurred())
+
+			_, err = aferox.StatSingle(fsys, "")
+
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("fs contains more than one entry"))
+			Expect(err.Error()).To(ContainSubstring("had:"))
+			Expect(err.Error()).To(ContainSubstring("found:"))
 		})
 	})
 })

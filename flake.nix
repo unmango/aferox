@@ -67,6 +67,7 @@
 
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
+              docker
               goEnv
               git
               ginkgo
