@@ -160,7 +160,7 @@ var _ = Describe("FromFs Error Cases", func() {
 			Fs:      afero.NewMemMapFs(),
 			walkErr: true,
 		}
-		
+
 		_, err := image.FromFs(fs)
 		Expect(err).To(HaveOccurred())
 	})

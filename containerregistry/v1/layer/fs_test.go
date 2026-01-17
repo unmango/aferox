@@ -235,7 +235,7 @@ var _ = Describe("FromFs Error Cases", func() {
 			Fs:      afero.NewMemMapFs(),
 			statErr: true,
 		}
-		
+
 		_, err := layer.FromFs(fs)
 		Expect(err).To(HaveOccurred())
 	})
@@ -244,12 +244,12 @@ var _ = Describe("FromFs Error Cases", func() {
 		memfs := afero.NewMemMapFs()
 		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
 		Expect(err).NotTo(HaveOccurred())
-		
+
 		fs := &errorFs{
 			Fs:      memfs,
 			openErr: true,
 		}
-		
+
 		_, err = layer.FromFs(fs)
 		Expect(err).To(HaveOccurred())
 		Expect(err.Error()).To(ContainSubstring("open error"))
@@ -259,11 +259,11 @@ var _ = Describe("FromFs Error Cases", func() {
 		memfs := afero.NewMemMapFs()
 		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
 		Expect(err).NotTo(HaveOccurred())
-		
+
 		fs := &openErrorFs{
 			Fs: memfs,
 		}
-		
+
 		_, err = layer.FromFs(fs)
 		Expect(err).To(HaveOccurred())
 		Expect(err.Error()).To(ContainSubstring("read error"))
@@ -273,11 +273,11 @@ var _ = Describe("FromFs Error Cases", func() {
 		memfs := afero.NewMemMapFs()
 		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
 		Expect(err).NotTo(HaveOccurred())
-		
+
 		fs := &negativeSizeFs{
 			Fs: memfs,
 		}
-		
+
 		_, err = layer.FromFs(fs)
 		Expect(err).To(HaveOccurred())
 		Expect(err.Error()).To(ContainSubstring("negative size"))
@@ -295,16 +295,16 @@ var _ = Describe("ToFs Error Cases", func() {
 		memfs := afero.NewMemMapFs()
 		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
 		Expect(err).NotTo(HaveOccurred())
-		
+
 		l, err := layer.FromFs(memfs)
 		Expect(err).NotTo(HaveOccurred())
-		
+
 		// Wrap it with error layer
 		errLayer := &errorLayer{
 			Layer:           l,
 			uncompressedErr: true,
 		}
-		
+
 		_, err = layer.ToFs(errLayer)
 		Expect(err).To(HaveOccurred())
 	})
