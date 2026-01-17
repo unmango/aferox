@@ -1,6 +1,7 @@
 bin/
 report.json
 cover.profile
+coverage.out
 go.work*
 .vscode/settings.json
 .make/

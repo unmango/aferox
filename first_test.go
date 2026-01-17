@@ -1,6 +1,7 @@
 package aferox_test
 
 import (
+	"errors"
 	"os"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -9,6 +10,18 @@ import (
 
 	"github.com/unmango/aferox"
 )
+
+// failingOpenFs wraps an afero.Fs and makes Open fail for non-root paths
+type failingOpenFs struct {
+	afero.Fs
+}
+
+func (f *failingOpenFs) Open(name string) (afero.File, error) {
+	if name != "" && name != "." {
+		return nil, errors.New("open failed")
+	}
+	return f.Fs.Open(name)
+}
 
 var _ = Describe("Single", func() {
 	Describe("StatSingle", func() {
@@ -142,6 +155,35 @@ var _ = Describe("Single", func() {
 
 				Expect(err).To(HaveOccurred())
 			})
+		})
+
+		It("should handle errors during walk for StatFirst", func() {
+			fs := afero.NewReadOnlyFs(afero.NewMemMapFs())
+
+			_, err := aferox.StatFirst(fs, "nonexistent")
+
+			Expect(err).To(HaveOccurred())
+		})
+
+		It("should handle errors during walk for OpenFirst", func() {
+			fs := afero.NewReadOnlyFs(afero.NewMemMapFs())
+
+			_, err := aferox.OpenFirst(fs, "nonexistent")
+
+			Expect(err).To(HaveOccurred())
+		})
+
+		It("should handle Open errors in OpenFirst", func() {
+			baseFs := afero.NewMemMapFs()
+			_, err := baseFs.Create("test.txt")
+			Expect(err).NotTo(HaveOccurred())
+			
+			fs := &failingOpenFs{Fs: baseFs}
+
+			_, err = aferox.OpenFirst(fs, "")
+
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("open failed"))
 		})
 	})
 })
