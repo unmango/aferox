@@ -6,7 +6,7 @@ import (
 	"io/fs"
 
 	"github.com/spf13/afero"
-	"github.com/unmango/go/option"
+	"github.com/unmango/go/fopt"
 )
 
 type errSingle struct {
@@ -20,7 +20,7 @@ func (e errSingle) Error() string {
 
 func StatSingle(fsys afero.Fs, root string, options ...IterOption) (fs.FileInfo, error) {
 	opts := &iterOptions{}
-	option.ApplyAll(opts, options)
+	fopt.ApplyAll(opts, options)
 
 	info, err := Fold(fsys, root,
 		func(path string, info fs.FileInfo, acc fs.FileInfo, err error) (fs.FileInfo, error) {
@@ -54,7 +54,7 @@ func StatSingle(fsys afero.Fs, root string, options ...IterOption) (fs.FileInfo,
 
 func OpenSingle(fsys afero.Fs, root string, options ...IterOption) (afero.File, error) {
 	opts := &iterOptions{}
-	option.ApplyAll(opts, options)
+	fopt.ApplyAll(opts, options)
 
 	file, err := Fold(fsys, root,
 		func(path string, info fs.FileInfo, acc afero.File, err error) (afero.File, error) {

@@ -12,6 +12,12 @@ import (
 	"github.com/unmango/go/slices"
 )
 
+type failingOpen struct{ afero.Fs }
+
+func (f failingOpen) Open(name string) (afero.File, error) {
+	return nil, errors.New("failed to open file")
+}
+
 var _ = Describe("Iter", func() {
 	It("should iterate over an empty fs", func() {
 		fs := afero.NewMemMapFs()
@@ -68,19 +74,18 @@ var _ = Describe("Iter", func() {
 	})
 
 	It("should continue on error when ContinueOnError is provided", func() {
-		fs := afero.NewMemMapFs()
-		// Create a file that will exist during walk
+		fs := failingOpen{afero.NewMemMapFs()}
 		_, err := fs.Create("test.txt")
 		Expect(err).NotTo(HaveOccurred())
 
 		seq := aferox.Iter(fs, "", aferox.ContinueOnError)
 
 		a, _, _ := slices.Collect3(seq)
-		Expect(a).NotTo(BeEmpty())
+		Expect(a).To(ConsistOf("", ""))
 	})
 
 	It("should filter errors when FilterErrors is provided", func() {
-		fs := afero.NewMemMapFs()
+		fs := failingOpen{afero.NewMemMapFs()}
 		_, err := fs.Create("test.txt")
 		Expect(err).NotTo(HaveOccurred())
 
@@ -88,7 +93,7 @@ var _ = Describe("Iter", func() {
 			return nil
 		}
 
-		seq := aferox.Iter(fs, "", aferox.ContinueOnError, aferox.FilterErrors(filter))
+		seq := aferox.Iter(fs, "", aferox.FilterErrors(filter))
 
 		a, _, _ := slices.Collect3(seq)
 		Expect(a).NotTo(BeEmpty())
@@ -98,17 +103,15 @@ var _ = Describe("Iter", func() {
 		fs := afero.NewMemMapFs()
 		_, err := fs.Create("file1.txt")
 		Expect(err).NotTo(HaveOccurred())
-		_, err = fs.Create("file2.txt")
-		Expect(err).NotTo(HaveOccurred())
 
 		count := 0
 		seq := aferox.Iter(fs, "")
 		seq(func(path string, info os.FileInfo, err error) bool {
 			count++
-			return path != "file1.txt"
+			return false
 		})
 
-		Expect(count).To(BeNumerically("<=", 3))
+		Expect(count).To(Equal(1))
 	})
 
 	It("should yield final error when iteration fails", func() {
@@ -116,14 +119,11 @@ var _ = Describe("Iter", func() {
 		_, err := fs.Create("test.txt")
 		Expect(err).NotTo(HaveOccurred())
 
-		// Use a readonly fs and try to walk a non-existent path
-		readonlyFs := afero.NewReadOnlyFs(fs)
-		seq := aferox.Iter(readonlyFs, "nonexistent/path")
+		seq := aferox.Iter(fs, "nonexistent/path")
 
 		paths, _, errs := slices.Collect3(seq)
-		Expect(len(paths)).To(BeNumerically(">", 0))
-		lastErr := errs[len(errs)-1]
-		Expect(lastErr).To(HaveOccurred())
+		Expect(paths).To(ConsistOf(""))
+		Expect(errs).To(ConsistOf(MatchError(ContainSubstring("file does not exist"))))
 	})
 
 	It("should apply FilterErrors that returns an error", func() {
@@ -139,10 +139,13 @@ var _ = Describe("Iter", func() {
 			return nil
 		}
 
-		seq := aferox.Iter(fs, "nonexistent", aferox.ContinueOnError, aferox.FilterErrors(filter))
+		seq := aferox.Iter(fs, "nonexistent",
+			aferox.ContinueOnError,
+			aferox.FilterErrors(filter),
+		)
 
 		_, _, errs := slices.Collect3(seq)
 		Expect(called).To(BeTrue(), "filter should have been called")
-		Expect(errs[len(errs)-1]).To(MatchError(expectedErr))
+		Expect(errs).To(ConsistOf(MatchError(expectedErr)))
 	})
 })
