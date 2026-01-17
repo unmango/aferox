@@ -2,6 +2,8 @@ module github.com/unmango/aferox/gitignore
 
 go 1.25.4
 
+tool github.com/onsi/ginkgo/v2/ginkgo
+
 require (
 	github.com/onsi/ginkgo/v2 v2.27.5
 	github.com/onsi/gomega v1.39.0
