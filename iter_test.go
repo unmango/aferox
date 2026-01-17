@@ -6,8 +6,8 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/spf13/afero"
 
+	"github.com/spf13/afero"
 	"github.com/unmango/aferox"
 	"github.com/unmango/go/slices"
 )
@@ -73,8 +73,6 @@ var _ = Describe("Iter", func() {
 		_, err := fs.Create("test.txt")
 		Expect(err).NotTo(HaveOccurred())
 
-		// Wrap in readonly to potentially cause errors during write operations
-		// But for reading, it should still work
 		seq := aferox.Iter(fs, "", aferox.ContinueOnError)
 
 		a, _, _ := slices.Collect3(seq)
@@ -94,7 +92,6 @@ var _ = Describe("Iter", func() {
 
 		a, _, _ := slices.Collect3(seq)
 		Expect(a).NotTo(BeEmpty())
-		// Note: This tests that FilterErrors option is applied without errors
 	})
 
 	It("should stop iteration early", func() {
@@ -108,14 +105,13 @@ var _ = Describe("Iter", func() {
 		seq := aferox.Iter(fs, "")
 		seq(func(path string, info os.FileInfo, err error) bool {
 			count++
-			return path != "file1.txt" // Continue until we find file1.txt
+			return path != "file1.txt"
 		})
 
-		Expect(count).To(BeNumerically("<=", 3)) // root + file1 + maybe one more before break
+		Expect(count).To(BeNumerically("<=", 3))
 	})
 
 	It("should yield final error when iteration fails", func() {
-		// Create a custom fs that returns an error during walk
 		fs := afero.NewMemMapFs()
 		_, err := fs.Create("test.txt")
 		Expect(err).NotTo(HaveOccurred())

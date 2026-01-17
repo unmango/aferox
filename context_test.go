@@ -1,22 +1,22 @@
 package aferox_test
 
 import (
-	stdctx "context"
+	"context"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/spf13/afero"
 
+	"github.com/spf13/afero"
 	"github.com/unmango/aferox"
 )
 
 // Mock setter for testing
 type mockSetter struct {
 	afero.Fs
-	ctx stdctx.Context
+	ctx context.Context
 }
 
-func (m *mockSetter) SetContext(ctx stdctx.Context) {
+func (m *mockSetter) SetContext(ctx context.Context) {
 	m.ctx = ctx
 }
 
@@ -27,7 +27,7 @@ func (m *mockSetter) Name() string {
 var _ = Describe("Context", func() {
 	Describe("SetContext", func() {
 		It("should set context on a context-supporting Fs", func() {
-			ctx := stdctx.Background()
+			ctx := context.Background()
 			mock := &mockSetter{Fs: afero.NewMemMapFs()}
 
 			err := aferox.SetContext(mock, ctx)
@@ -37,7 +37,7 @@ var _ = Describe("Context", func() {
 		})
 
 		It("should return error when Fs does not support context", func() {
-			ctx := stdctx.Background()
+			ctx := context.Background()
 			fs := afero.NewMemMapFs()
 
 			err := aferox.SetContext(fs, ctx)
@@ -49,7 +49,7 @@ var _ = Describe("Context", func() {
 
 	Describe("FromContext", func() {
 		It("should return default Fs when context has no Fs", func() {
-			ctx := stdctx.Background()
+			ctx := context.Background()
 
 			fs := aferox.FromContext(ctx)
 
@@ -59,7 +59,7 @@ var _ = Describe("Context", func() {
 
 		It("should return default Fs when context value is nil", func() {
 			// Create a context with a different key
-			ctx := stdctx.WithValue(stdctx.Background(), "different-key", nil)
+			ctx := context.WithValue(context.Background(), "different-key", nil)
 
 			fs := aferox.FromContext(ctx)
 
