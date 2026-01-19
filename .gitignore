@@ -9,3 +9,4 @@ go.work*
 .envrc
 result
 .direnv/
+coverage.*

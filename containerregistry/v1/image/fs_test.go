@@ -13,20 +13,8 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/containerregistry/v1/image"
+	"github.com/unmango/aferox/testing"
 )
-
-// errorFs is a filesystem that returns errors on operations
-type errorFs struct {
-	afero.Fs
-	walkErr bool
-}
-
-func (e *errorFs) Stat(name string) (os.FileInfo, error) {
-	if e.walkErr {
-		return nil, errors.New("stat error")
-	}
-	return e.Fs.Stat(name)
-}
 
 // https://github.com/google/go-containerregistry/blob/main/pkg/crane/filemap_test.go
 var _ = DescribeTableSubtree("Fs",
@@ -155,10 +143,8 @@ var _ = DescribeTableSubtree("Fs",
 
 var _ = Describe("FromFs Error Cases", func() {
 	It("should return error when layer creation fails", func() {
-		// Create a filesystem that will cause layer.FromFs to fail
-		fs := &errorFs{
-			Fs:      afero.NewMemMapFs(),
-			walkErr: true,
+		fs := &testing.ErrorFs{
+			StatErr: errors.New("stat error"),
 		}
 
 		_, err := image.FromFs(fs)
