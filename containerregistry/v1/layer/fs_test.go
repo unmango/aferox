@@ -4,15 +4,30 @@ import (
 	"archive/tar"
 	"errors"
 	"io"
+	"io/fs"
 	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/google/go-containerregistry/pkg/crane"
+	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/containerregistry/v1/layer"
+	"github.com/unmango/aferox/testing"
 )
+
+type errorLayer struct {
+	v1.Layer
+	uncompressedErr bool
+}
+
+func (e *errorLayer) Uncompressed() (io.ReadCloser, error) {
+	if e.uncompressedErr {
+		return nil, errors.New("uncompressed error")
+	}
+	return e.Layer.Uncompressed()
+}
 
 // https://github.com/google/go-containerregistry/blob/main/pkg/crane/filemap_test.go
 var _ = DescribeTableSubtree("Fs",
@@ -139,3 +154,97 @@ var _ = DescribeTableSubtree("Fs",
 		"sha256:1e637602abbcab2dcedcc24e0b7c19763454a47261f1658b57569530b369ccb9",
 	),
 )
+
+var _ = Describe("FromFs Error Cases", func() {
+	It("should return error when Walk fails", func() {
+		fs := &testing.ErrorFs{
+			StatErr: errors.New("stat error"),
+		}
+
+		_, err := layer.FromFs(fs)
+		Expect(err).To(HaveOccurred())
+	})
+
+	It("should return error when Open fails", func() {
+		memfs := afero.NewMemMapFs()
+		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
+		Expect(err).NotTo(HaveOccurred())
+
+		fs := &testing.ErrorFs{
+			Fs:      memfs,
+			OpenErr: errors.New("open error"),
+		}
+
+		_, err = layer.FromFs(fs)
+		Expect(err).To(HaveOccurred())
+		Expect(err.Error()).To(ContainSubstring("open error"))
+	})
+
+	It("should return error when Read fails", func() {
+		memfs := afero.NewMemMapFs()
+		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
+		Expect(err).NotTo(HaveOccurred())
+
+		fs := &testing.Fs{
+			Fs: memfs,
+			OpenFunc: func(s string) (afero.File, error) {
+				if s != "/test" {
+					return memfs.Open(s)
+				}
+
+				return &testing.ErrorFile{
+					ReadErr: errors.New("read error"),
+				}, nil
+			},
+		}
+
+		_, err = layer.FromFs(fs)
+		Expect(err).To(MatchError(ContainSubstring("read error")))
+	})
+
+	It("should return error when WriteHeader fails", func() {
+		memfs := afero.NewMemMapFs()
+		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
+		Expect(err).NotTo(HaveOccurred())
+
+		fs := &testing.Fs{
+			Fs: memfs,
+			StatFunc: func(s string) (fs.FileInfo, error) {
+				if s != "/test" {
+					return memfs.Stat(s)
+				}
+				return &testing.FileInfo{
+					IsDirValue: false,
+					SizeValue:  -1,
+				}, nil
+			},
+		}
+
+		_, err = layer.FromFs(fs)
+		Expect(err).To(MatchError(ContainSubstring("negative size")))
+	})
+
+	// Note: Testing tar.Writer.Close() error is extremely difficult
+	// as it rarely fails with bytes.Buffer as the underlying writer.
+	// This error path exists for robustness but is nearly impossible to
+	// trigger without complex mocking of the tar.Writer itself.
+})
+
+var _ = Describe("ToFs Error Cases", func() {
+	It("should return error when Uncompressed fails", func() {
+		memfs := afero.NewMemMapFs()
+		err := afero.WriteFile(memfs, "/test", []byte("content"), 0644)
+		Expect(err).NotTo(HaveOccurred())
+
+		l, err := layer.FromFs(memfs)
+		Expect(err).NotTo(HaveOccurred())
+
+		errLayer := &errorLayer{
+			Layer:           l,
+			uncompressedErr: true,
+		}
+
+		_, err = layer.ToFs(errLayer)
+		Expect(err).To(HaveOccurred())
+	})
+})

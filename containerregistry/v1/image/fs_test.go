@@ -13,6 +13,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/containerregistry/v1/image"
+	"github.com/unmango/aferox/testing"
 )
 
 // https://github.com/google/go-containerregistry/blob/main/pkg/crane/filemap_test.go
@@ -139,3 +140,14 @@ var _ = DescribeTableSubtree("Fs",
 		"sha256:dfca2803510c8e3b83a3151f7c035c60cfa2a8a52465b802e18b85014de361f1",
 	),
 )
+
+var _ = Describe("FromFs Error Cases", func() {
+	It("should return error when layer creation fails", func() {
+		fs := &testing.ErrorFs{
+			StatErr: errors.New("stat error"),
+		}
+
+		_, err := image.FromFs(fs)
+		Expect(err).To(HaveOccurred())
+	})
+})
