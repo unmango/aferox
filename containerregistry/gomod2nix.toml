@@ -7,9 +7,6 @@ schema = 3
   [mod."github.com/containerd/stargz-snapshotter/estargz"]
     version = "v0.18.1"
     hash = "sha256-gfhN/OA+yptydsuQXL9F4S0rAfntUNnXvB2AZQhQJig="
-  [mod."github.com/davecgh/go-spew"]
-    version = "v1.1.2-0.20180830191138-d8f796af33cc"
-    hash = "sha256-fV9oI51xjHdOmEx6+dlq7Ku2Ag+m/bmbzPo6A4Y74qc="
   [mod."github.com/docker/cli"]
     version = "v29.0.3+incompatible"
     hash = "sha256-TUFZYeLpRPgPdOzmerLrKjNdl1N36evEVdcId6lH5nk="
@@ -55,9 +52,6 @@ schema = 3
   [mod."github.com/opencontainers/image-spec"]
     version = "v1.1.1"
     hash = "sha256-bxBjtl+6846Ed3QHwdssOrNvlHV6b+Dn17zPISSQGP8="
-  [mod."github.com/pmezard/go-difflib"]
-    version = "v1.0.1-0.20181226105442-5d4384ee4fb2"
-    hash = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90="
   [mod."github.com/rogpeppe/go-internal"]
     version = "v1.14.1"
     hash = "sha256-6NzhXCCD1Qhj05WHbCDxH5hwfNM6psoAk7uIxm7N55E="
@@ -71,8 +65,8 @@ schema = 3
     version = "v1.11.1"
     hash = "sha256-sWfjkuKJyDllDEtnM8sb/pdLzPQmUYWYtmeWz/5suUc="
   [mod."github.com/unmango/aferox"]
-    version = "v0.3.3"
-    hash = "sha256-pdIvZefa8Yl5zK1PFQYab+ExPHALTKgfKDZ5WLEcT3A="
+    version = "v0.4.0"
+    hash = "sha256-hbj9nJ0w0bCvN4yXTA2YGWv9Vix9zzFKfBVo+2JlCpQ="
   [mod."github.com/vbatts/tar-split"]
     version = "v0.12.2"
     hash = "sha256-6gOHl4puCV9T2EWpFpqMCkV9N2PEPSiWbNZNp20q7iM="
