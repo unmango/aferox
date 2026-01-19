@@ -2,7 +2,6 @@ name: GitHub
 
 on:
   push:
-    # For code coverage reports
     branches: [main]
     paths:
       - .github/workflows/github.yml
@@ -33,6 +32,8 @@ jobs:
           --github-output \
           --race \
           --trace
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
   nix:
     runs-on: ubuntu-latest
