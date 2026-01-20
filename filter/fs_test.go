@@ -172,4 +172,19 @@ var _ = Describe("Fs", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(paths).To(ConsistOf("", "test"))
 	})
+
+	It("should pass directory entries to the predicate", func() {
+		base := afero.NewMemMapFs()
+		Expect(base.Mkdir("test", os.ModePerm)).To(Succeed())
+		err := afero.WriteFile(base, "test/file.txt", []byte("testing"), os.ModePerm)
+		Expect(err).NotTo(HaveOccurred())
+
+		filtered := filter.NewFs(base, func(s string) bool {
+			Expect(s).To(Equal("test/file.txt"))
+			return true
+		})
+
+		_, err = afero.ReadDir(filtered, "test")
+		Expect(err).NotTo(HaveOccurred())
+	})
 })

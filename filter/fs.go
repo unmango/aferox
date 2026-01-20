@@ -30,6 +30,7 @@ func FromPredicateWithError(base afero.Fs, pred Predicate, onFalse error) afero.
 func FromPredicate(base afero.Fs, pred Predicate) afero.Fs {
 	return FromPredicateWithError(base, pred, syscall.ENOENT)
 }
+
 func NewFs(base afero.Fs, predicate Predicate) afero.Fs {
 	return FromPredicate(base, predicate)
 }

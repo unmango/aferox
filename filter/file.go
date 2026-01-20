@@ -2,6 +2,7 @@ package filter
 
 import (
 	"io/fs"
+	"path/filepath"
 
 	"github.com/spf13/afero"
 )
@@ -40,7 +41,7 @@ func (f *File) Readdir(count int) (res []fs.FileInfo, err error) {
 	}
 
 	for _, i := range infos {
-		if i.IsDir() || f.filter(i.Name()) == nil {
+		if i.IsDir() || f.filter(filepath.Join(f.file.Name(), i.Name())) == nil {
 			res = append(res, i)
 		}
 	}
