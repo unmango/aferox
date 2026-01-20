@@ -12,11 +12,9 @@ import (
 
 const DefaultFile = ".gitignore"
 
-type Ignore interface {
-	MatchesPath(string) bool
-}
+type Ignore = ignore.IgnoreParser
 
-func NewFsFromGitIgnoreLines(base afero.Fs, lines ...string) afero.Fs {
+func NewFsFromLines(base afero.Fs, lines ...string) afero.Fs {
 	return NewFsFromIgnore(base, ignore.CompileIgnoreLines(lines...))
 }
 
@@ -26,7 +24,7 @@ func NewFsFromIgnore(base afero.Fs, ignore Ignore) afero.Fs {
 	})
 }
 
-func NewFsFromGitIgnoreReader(base afero.Fs, reader io.Reader) (afero.Fs, error) {
+func NewFsFromReader(base afero.Fs, reader io.Reader) (afero.Fs, error) {
 	lines := []string{}
 	s := bufio.NewScanner(reader)
 	for s.Scan() {
@@ -36,18 +34,18 @@ func NewFsFromGitIgnoreReader(base afero.Fs, reader io.Reader) (afero.Fs, error)
 		return nil, fmt.Errorf("scanning ignore lines: %w", s.Err())
 	}
 
-	return NewFsFromGitIgnoreLines(base, lines...), nil
+	return NewFsFromLines(base, lines...), nil
 }
 
-func NewFsFromGitIgnoreFile(base afero.Fs, path string) (afero.Fs, error) {
+func NewFsFromFile(base afero.Fs, path string) (afero.Fs, error) {
 	f, err := base.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("opening ignore file: %w", err)
 	}
 	defer f.Close()
-	return NewFsFromGitIgnoreReader(base, f)
+	return NewFsFromReader(base, f)
 }
 
-func OpenDefaultGitIgnore(base afero.Fs) (afero.Fs, error) {
-	return NewFsFromGitIgnoreFile(base, DefaultFile)
+func OpenDefault(base afero.Fs) (afero.Fs, error) {
+	return NewFsFromFile(base, DefaultFile)
 }

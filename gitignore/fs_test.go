@@ -6,12 +6,17 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	ignore "github.com/sabhiram/go-gitignore"
 
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/gitignore"
 )
 
 type ignoreStub string
+
+func (s ignoreStub) MatchesPathHow(f string) (bool, *ignore.IgnorePattern) {
+	return string(s) == f, nil
+}
 
 func (s ignoreStub) MatchesPath(p string) bool {
 	return string(s) == p
@@ -24,12 +29,12 @@ var _ = Describe("Fs", func() {
 		base = afero.NewMemMapFs()
 	})
 
-	Describe("NewFsFromGitIgnoreLines", func() {
+	Describe("NewFsFromLines", func() {
 		It("should ignore pattern", func() {
 			err := afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs := gitignore.NewFsFromGitIgnoreLines(base, "*.txt")
+			fs := gitignore.NewFsFromLines(base, "*.txt")
 
 			_, err = fs.Stat("blah.txt")
 			Expect(err).To(MatchError(os.ErrNotExist))
@@ -39,7 +44,7 @@ var _ = Describe("Fs", func() {
 			err := afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs := gitignore.NewFsFromGitIgnoreLines(base, "*.blah")
+			fs := gitignore.NewFsFromLines(base, "*.blah")
 
 			_, err = fs.Stat("blah.txt")
 			Expect(err).NotTo(HaveOccurred())
@@ -68,13 +73,13 @@ var _ = Describe("Fs", func() {
 		})
 	})
 
-	Describe("NewFsFromGitIgnoreReader", func() {
+	Describe("NewFsFromReader", func() {
 		It("should ignore pattern", func() {
 			buf := bytes.NewBufferString("*.txt")
 			err := afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs, err := gitignore.NewFsFromGitIgnoreReader(base, buf)
+			fs, err := gitignore.NewFsFromReader(base, buf)
 
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
@@ -86,7 +91,7 @@ var _ = Describe("Fs", func() {
 			err := afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs, err := gitignore.NewFsFromGitIgnoreReader(base, buf)
+			fs, err := gitignore.NewFsFromReader(base, buf)
 
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
@@ -94,14 +99,14 @@ var _ = Describe("Fs", func() {
 		})
 	})
 
-	Describe("NewFsFromGitIgnoreFile", func() {
+	Describe("NewFsFromFile", func() {
 		It("should ignore pattern", func() {
 			err := afero.WriteFile(base, "git.ignore", []byte("*.txt"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			err = afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs, err := gitignore.NewFsFromGitIgnoreFile(base, "git.ignore")
+			fs, err := gitignore.NewFsFromFile(base, "git.ignore")
 
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
@@ -114,7 +119,7 @@ var _ = Describe("Fs", func() {
 			err = afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs, err := gitignore.NewFsFromGitIgnoreFile(base, "git.ignore")
+			fs, err := gitignore.NewFsFromFile(base, "git.ignore")
 
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
@@ -122,14 +127,14 @@ var _ = Describe("Fs", func() {
 		})
 	})
 
-	Describe("OpenDefaultGitIgnore", func() {
+	Describe("OpenDefault", func() {
 		It("should ignore pattern", func() {
 			err := afero.WriteFile(base, ".gitignore", []byte("*.txt"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			err = afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs, err := gitignore.OpenDefaultGitIgnore(base)
+			fs, err := gitignore.OpenDefault(base)
 
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
@@ -142,7 +147,7 @@ var _ = Describe("Fs", func() {
 			err = afero.WriteFile(base, "blah.txt", []byte("fdh"), os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 
-			fs, err := gitignore.OpenDefaultGitIgnore(base)
+			fs, err := gitignore.OpenDefault(base)
 
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
