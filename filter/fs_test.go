@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/filter"
+	"github.com/unmango/aferox/testing"
 )
 
 var _ = Describe("Fs", func() {
@@ -186,5 +187,212 @@ var _ = Describe("Fs", func() {
 
 		_, err = afero.ReadDir(filtered, "test")
 		Expect(err).NotTo(HaveOccurred())
+	})
+
+	Describe("Mkdir", func() {
+		It("should create a directory", func() {
+			base := afero.NewMemMapFs()
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+
+			err := filtered.Mkdir("testdir", os.ModePerm)
+
+			Expect(err).NotTo(HaveOccurred())
+			exists, err := afero.Exists(base, "testdir")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exists).To(BeTrue())
+		})
+	})
+
+	Describe("MkdirAll", func() {
+		It("should create nested directories", func() {
+			base := afero.NewMemMapFs()
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+
+			err := filtered.MkdirAll("path/to/dir", os.ModePerm)
+
+			Expect(err).NotTo(HaveOccurred())
+			exists, err := afero.Exists(base, "path/to/dir")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exists).To(BeTrue())
+		})
+	})
+
+	Describe("RemoveAll", func() {
+		It("should remove a directory", func() {
+			base := afero.NewMemMapFs()
+			Expect(base.Mkdir("testdir", os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+
+			err := filtered.RemoveAll("testdir")
+
+			Expect(err).NotTo(HaveOccurred())
+			exists, err := afero.Exists(base, "testdir")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exists).To(BeFalse())
+		})
+
+		It("should remove a non-filtered file", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return s == "test.txt" })
+
+			err := filtered.RemoveAll("test.txt")
+
+			Expect(err).NotTo(HaveOccurred())
+			exists, err := afero.Exists(base, "test.txt")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exists).To(BeFalse())
+		})
+
+		It("should not allow removing a filtered file", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return s != "test.txt" })
+
+			err := filtered.RemoveAll("test.txt")
+
+			Expect(err).To(MatchError(syscall.ENOENT))
+		})
+	})
+
+	Describe("Rename", func() {
+		It("should rename a non-filtered file", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return s == "old.txt" || s == "new.txt" })
+
+			err := filtered.Rename("old.txt", "new.txt")
+
+			Expect(err).NotTo(HaveOccurred())
+			exists, err := afero.Exists(base, "new.txt")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exists).To(BeTrue())
+		})
+
+		It("should not rename a filtered file", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return false })
+
+			err := filtered.Rename("old.txt", "new.txt")
+
+			Expect(err).To(MatchError(syscall.ENOENT))
+		})
+
+		It("should not rename to a filtered name", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return s == "old.txt" })
+
+			err := filtered.Rename("old.txt", "new.txt")
+
+			Expect(err).To(MatchError(syscall.ENOENT))
+		})
+
+		It("should allow renaming directories", func() {
+			base := afero.NewMemMapFs()
+			Expect(base.Mkdir("olddir", os.ModePerm)).To(Succeed())
+			filtered := filter.NewFs(base, func(s string) bool { return false })
+
+			err := filtered.Rename("olddir", "newdir")
+
+			Expect(err).NotTo(HaveOccurred())
+		})
+	})
+
+	Describe("Filter variations", func() {
+		It("should work with nil filter", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			filtered := filter.FromFilter(base, nil)
+
+			_, err := filtered.Open("test.txt")
+			Expect(err).NotTo(HaveOccurred())
+
+			_, err = filtered.Create("new.txt")
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("should work with FromPredicateWithError", func() {
+			base := afero.NewMemMapFs()
+			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
+			customErr := fs.ErrPermission
+			filtered := filter.FromPredicateWithError(base, func(s string) bool {
+				return s != "test.txt"
+			}, customErr)
+
+			_, err := filtered.Open("test.txt")
+			Expect(err).To(MatchError(customErr))
+		})
+	})
+
+	Describe("Error handling", func() {
+		It("should handle IsDir error in Open", func() {
+			base := &testing.Fs{Fs: afero.NewMemMapFs()}
+			expectedErr := fs.ErrPermission
+			base.StatFunc = func(name string) (fs.FileInfo, error) {
+				return nil, expectedErr
+			}
+
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+			_, err := filtered.Open("test.txt")
+
+			Expect(err).To(MatchError(expectedErr))
+		})
+
+		It("should handle Open error", func() {
+			base := &testing.Fs{Fs: afero.NewMemMapFs()}
+			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
+
+			expectedErr := fs.ErrNotExist
+			base.OpenFunc = func(name string) (afero.File, error) {
+				return nil, expectedErr
+			}
+
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+			_, err := filtered.Open("test.txt")
+
+			Expect(err).To(MatchError(expectedErr))
+		})
+
+		It("should handle IsDir error in RemoveAll", func() {
+			base := &testing.Fs{Fs: afero.NewMemMapFs()}
+			expectedErr := fs.ErrPermission
+			base.StatFunc = func(name string) (fs.FileInfo, error) {
+				return nil, expectedErr
+			}
+
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+			err := filtered.RemoveAll("test.txt")
+
+			Expect(err).To(MatchError(expectedErr))
+		})
+
+		It("should handle IsDir error in Rename", func() {
+			base := &testing.Fs{Fs: afero.NewMemMapFs()}
+			expectedErr := fs.ErrPermission
+			base.StatFunc = func(name string) (fs.FileInfo, error) {
+				return nil, expectedErr
+			}
+
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+			err := filtered.Rename("old.txt", "new.txt")
+
+			Expect(err).To(MatchError(expectedErr))
+		})
+
+		It("should handle IsDir error in dirOrMatches", func() {
+			base := &testing.Fs{Fs: afero.NewMemMapFs()}
+			expectedErr := fs.ErrInvalid
+			base.StatFunc = func(name string) (fs.FileInfo, error) {
+				return nil, expectedErr
+			}
+
+			filtered := filter.NewFs(base, func(s string) bool { return true })
+
+			// Test dirOrMatches through Stat
+			_, err := filtered.Stat("test.txt")
+			Expect(err).To(MatchError(expectedErr))
+		})
 	})
 })
