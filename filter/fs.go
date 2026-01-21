@@ -10,8 +10,10 @@ import (
 )
 
 type (
-	Filter    func(string) error
-	Predicate func(string) bool
+	// Filter evaluates a filesystem operation and returns an error if it should be blocked.
+	Filter func(Operation) error
+	// Predicate evaluates a filesystem operation and returns true if it should be allowed.
+	Predicate func(Operation) bool
 )
 
 func FromFilter(base afero.Fs, filter Filter) afero.Fs {
@@ -19,8 +21,8 @@ func FromFilter(base afero.Fs, filter Filter) afero.Fs {
 }
 
 func FromPredicateWithError(base afero.Fs, pred Predicate, onFalse error) afero.Fs {
-	return FromFilter(base, func(s string) error {
-		if pred(s) {
+	return FromFilter(base, func(op Operation) error {
+		if pred(op) {
 			return nil
 		}
 		return onFalse
@@ -35,6 +37,22 @@ func NewFs(base afero.Fs, predicate Predicate) afero.Fs {
 	return FromPredicate(base, predicate)
 }
 
+// PathFilter creates a Filter from a path-based filter function.
+// This is a convenience function for backward compatibility.
+func PathFilter(fn func(string) error) Filter {
+	return func(op Operation) error {
+		return fn(op.Path())
+	}
+}
+
+// PathPredicate creates a Predicate from a path-based predicate function.
+// This is a convenience function for backward compatibility.
+func PathPredicate(fn func(string) bool) Predicate {
+	return func(op Operation) bool {
+		return fn(op.Path())
+	}
+}
+
 type Fs struct {
 	src    afero.Fs
 	filter Filter
@@ -42,7 +60,7 @@ type Fs struct {
 
 // Chmod implements afero.Fs.
 func (f *Fs) Chmod(name string, mode fs.FileMode) error {
-	if err := f.dirOrMatches(name); err != nil {
+	if err := f.dirOrMatches(ChmodOp{Name: name, Mode: mode}); err != nil {
 		return err
 	}
 
@@ -51,7 +69,7 @@ func (f *Fs) Chmod(name string, mode fs.FileMode) error {
 
 // Chown implements afero.Fs.
 func (f *Fs) Chown(name string, uid int, gid int) error {
-	if err := f.dirOrMatches(name); err != nil {
+	if err := f.dirOrMatches(ChownOp{Name: name, UID: uid, GID: gid}); err != nil {
 		return err
 	}
 
@@ -60,7 +78,7 @@ func (f *Fs) Chown(name string, uid int, gid int) error {
 
 // Chtimes implements afero.Fs.
 func (f *Fs) Chtimes(name string, atime time.Time, mtime time.Time) error {
-	if err := f.dirOrMatches(name); err != nil {
+	if err := f.dirOrMatches(ChtimesOp{Name: name, Atime: atime, Mtime: mtime}); err != nil {
 		return err
 	}
 
@@ -69,7 +87,7 @@ func (f *Fs) Chtimes(name string, atime time.Time, mtime time.Time) error {
 
 // Create implements afero.Fs.
 func (f *Fs) Create(name string) (afero.File, error) {
-	if err := f.matchesName(name); err != nil {
+	if err := f.matches(CreateOp{Name: name}); err != nil {
 		return nil, err
 	}
 
@@ -98,7 +116,7 @@ func (f *Fs) Open(name string) (afero.File, error) {
 		return nil, err
 	}
 	if !dir {
-		if err := f.matchesName(name); err != nil {
+		if err := f.matches(OpenOp{Name: name}); err != nil {
 			return nil, err
 		}
 	}
@@ -116,7 +134,7 @@ func (f *Fs) Open(name string) (afero.File, error) {
 
 // OpenFile implements afero.Fs.
 func (f *Fs) OpenFile(name string, flag int, perm fs.FileMode) (afero.File, error) {
-	if err := f.dirOrMatches(name); err != nil {
+	if err := f.dirOrMatches(OpenFileOp{Name: name, Flag: flag, Perm: perm}); err != nil {
 		return nil, err
 	}
 
@@ -125,7 +143,7 @@ func (f *Fs) OpenFile(name string, flag int, perm fs.FileMode) (afero.File, erro
 
 // Remove implements afero.Fs.
 func (f *Fs) Remove(name string) error {
-	if err := f.dirOrMatches(name); err != nil {
+	if err := f.dirOrMatches(RemoveOp{Name: name}); err != nil {
 		return err
 	}
 	return f.src.Remove(name)
@@ -138,7 +156,7 @@ func (f *Fs) RemoveAll(path string) error {
 		return err
 	}
 	if !dir {
-		if err = f.matchesName(path); err != nil {
+		if err = f.matches(RemoveAllOp{PathName: path}); err != nil {
 			return err
 		}
 	}
@@ -155,10 +173,12 @@ func (f *Fs) Rename(oldname string, newname string) error {
 	if dir {
 		return nil
 	}
-	if err = f.matchesName(oldname); err != nil {
+	op := RenameOp{Oldname: oldname, Newname: newname}
+	if err = f.matches(op); err != nil {
 		return err
 	}
-	if err = f.matchesName(newname); err != nil {
+	// Also check the new name
+	if err = f.matches(CreateOp{Name: newname}); err != nil {
 		return err
 	}
 
@@ -167,15 +187,15 @@ func (f *Fs) Rename(oldname string, newname string) error {
 
 // Stat implements afero.Fs.
 func (f *Fs) Stat(name string) (fs.FileInfo, error) {
-	if err := f.dirOrMatches(name); err != nil {
+	if err := f.dirOrMatches(StatOp{Name: name}); err != nil {
 		return nil, err
 	}
 
 	return f.src.Stat(name)
 }
 
-func (f *Fs) dirOrMatches(name string) error {
-	dir, err := afero.IsDir(f.src, name)
+func (f *Fs) dirOrMatches(op Operation) error {
+	dir, err := afero.IsDir(f.src, op.Path())
 	if err != nil {
 		return err
 	}
@@ -183,13 +203,13 @@ func (f *Fs) dirOrMatches(name string) error {
 		return nil
 	}
 
-	return f.matchesName(name)
+	return f.matches(op)
 }
 
-func (f *Fs) matchesName(name string) error {
+func (f *Fs) matches(op Operation) error {
 	if f.filter == nil {
 		return nil
 	} else {
-		return f.filter(name)
+		return f.filter(op)
 	}
 }
