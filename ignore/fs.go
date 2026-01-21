@@ -3,6 +3,7 @@ package ignore
 import (
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/filter"
+	"github.com/unmango/aferox/op"
 )
 
 type Ignore interface {
@@ -10,7 +11,7 @@ type Ignore interface {
 }
 
 func NewFs(base afero.Fs, ignore Ignore) afero.Fs {
-	return filter.FromPredicate(base, func(s string) bool {
-		return !ignore.MatchesPath(s)
+	return filter.FromPredicate(base, func(op op.Operation) bool {
+		return !ignore.MatchesPath(op.Path())
 	})
 }
