@@ -77,7 +77,7 @@ var _ = Describe("File", func() {
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
-			
+
 			err = wf.Truncate(5)
 			Expect(err).NotTo(HaveOccurred())
 		})
@@ -87,7 +87,7 @@ var _ = Describe("File", func() {
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
-			
+
 			n, err := wf.Write([]byte(" test"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(5))
@@ -98,7 +98,7 @@ var _ = Describe("File", func() {
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
-			
+
 			n, err := wf.WriteAt([]byte("TEST"), 0)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(4))
@@ -109,7 +109,7 @@ var _ = Describe("File", func() {
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
-			
+
 			n, err := wf.WriteString(" testing")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(8))
@@ -124,11 +124,11 @@ var _ = Describe("File", func() {
 				Expect(afero.WriteFile(base, "dir/file1.txt", []byte("1"), os.ModePerm)).To(Succeed())
 				Expect(afero.WriteFile(base, "dir/file2.go", []byte("2"), os.ModePerm)).To(Succeed())
 				Expect(base.Mkdir("dir/subdir", os.ModePerm)).To(Succeed())
-				
+
 				filtered = filter.NewFs(base, func(s string) bool {
 					return filepath.Ext(s) == ".txt"
 				})
-				
+
 				var err error
 				file, err = filtered.Open("dir")
 				Expect(err).NotTo(HaveOccurred())
@@ -151,11 +151,11 @@ var _ = Describe("File", func() {
 				Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
 				Expect(afero.WriteFile(base, "dir/file1.txt", []byte("1"), os.ModePerm)).To(Succeed())
 				Expect(afero.WriteFile(base, "dir/file2.go", []byte("2"), os.ModePerm)).To(Succeed())
-				
+
 				filtered = filter.NewFs(base, func(s string) bool {
 					return filepath.Ext(s) == ".txt"
 				})
-				
+
 				var err error
 				file, err = filtered.Open("dir")
 				Expect(err).NotTo(HaveOccurred())
@@ -173,32 +173,32 @@ var _ = Describe("File", func() {
 		It("should handle write operations on wrapped file", func() {
 			base := &testing.Fs{Fs: afero.NewMemMapFs()}
 			Expect(afero.WriteFile(base, "test.txt", []byte("hello"), os.ModePerm)).To(Succeed())
-			
+
 			// Mock Open to return a writable file
 			base.OpenFunc = func(name string) (afero.File, error) {
 				return base.Fs.OpenFile(name, os.O_RDWR, os.ModePerm)
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return s == "test.txt" })
-			
+
 			// Now Open will return a File wrapper around a writable file
 			file, err := filtered.Open("test.txt")
 			Expect(err).NotTo(HaveOccurred())
 			defer file.Close()
-			
+
 			// Test write operations
 			n, err := file.Write([]byte(" world"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(6))
-			
+
 			n, err = file.WriteAt([]byte("HELLO"), 0)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(5))
-			
+
 			n, err = file.WriteString("!")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(n).To(Equal(1))
-			
+
 			err = file.Truncate(3)
 			Expect(err).NotTo(HaveOccurred())
 		})
@@ -207,7 +207,7 @@ var _ = Describe("File", func() {
 			base := &testing.Fs{Fs: afero.NewMemMapFs()}
 			Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
 			Expect(afero.WriteFile(base, "dir/file.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			
+
 			errToReturn := fs.ErrInvalid
 			base.OpenFunc = func(name string) (afero.File, error) {
 				return &testing.File{
@@ -220,17 +220,17 @@ var _ = Describe("File", func() {
 					},
 				}, nil
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return true })
 			f, err := filtered.Open("dir")
 			Expect(err).NotTo(HaveOccurred())
 			defer f.Close()
-			
+
 			// These should propagate the error
 			_, err = f.Readdir(-1)
 			Expect(err).To(MatchError(errToReturn))
-			
-			_, err = f.Readdirnames(-1) 
+
+			_, err = f.Readdirnames(-1)
 			Expect(err).To(MatchError(errToReturn))
 		})
 	})

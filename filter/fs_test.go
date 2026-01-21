@@ -333,25 +333,25 @@ var _ = Describe("Fs", func() {
 			base.StatFunc = func(name string) (fs.FileInfo, error) {
 				return nil, expectedErr
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return true })
 			_, err := filtered.Open("test.txt")
-			
+
 			Expect(err).To(MatchError(expectedErr))
 		})
 
 		It("should handle Open error", func() {
 			base := &testing.Fs{Fs: afero.NewMemMapFs()}
 			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			
+
 			expectedErr := fs.ErrNotExist
 			base.OpenFunc = func(name string) (afero.File, error) {
 				return nil, expectedErr
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return true })
 			_, err := filtered.Open("test.txt")
-			
+
 			Expect(err).To(MatchError(expectedErr))
 		})
 
@@ -361,10 +361,10 @@ var _ = Describe("Fs", func() {
 			base.StatFunc = func(name string) (fs.FileInfo, error) {
 				return nil, expectedErr
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return true })
 			err := filtered.RemoveAll("test.txt")
-			
+
 			Expect(err).To(MatchError(expectedErr))
 		})
 
@@ -374,10 +374,10 @@ var _ = Describe("Fs", func() {
 			base.StatFunc = func(name string) (fs.FileInfo, error) {
 				return nil, expectedErr
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return true })
 			err := filtered.Rename("old.txt", "new.txt")
-			
+
 			Expect(err).To(MatchError(expectedErr))
 		})
 
@@ -387,9 +387,9 @@ var _ = Describe("Fs", func() {
 			base.StatFunc = func(name string) (fs.FileInfo, error) {
 				return nil, expectedErr
 			}
-			
+
 			filtered := filter.NewFs(base, func(s string) bool { return true })
-			
+
 			// Test dirOrMatches through Stat
 			_, err := filtered.Stat("test.txt")
 			Expect(err).To(MatchError(expectedErr))
