@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/afero"
+	"github.com/unmango/aferox/op"
 )
 
 type File struct {
@@ -42,8 +43,8 @@ func (f *File) Readdir(count int) (res []fs.FileInfo, err error) {
 
 	for _, i := range infos {
 		path := filepath.Join(f.file.Name(), i.Name())
-		op := ReaddirOp{Name: path, Count: count}
-		if i.IsDir() || f.filter(op) == nil {
+		operation := op.Readdir{Name: path, Count: count}
+		if i.IsDir() || f.filter(operation) == nil {
 			res = append(res, i)
 		}
 	}
