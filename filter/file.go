@@ -41,12 +41,8 @@ func (f *File) Readdir(count int) (res []fs.FileInfo, err error) {
 	}
 
 	for _, i := range infos {
-		if !i.IsDir() {
-			continue
-		}
-
 		path := filepath.Join(f.file.Name(), i.Name())
-		if f.filter(path) == nil {
+		if i.IsDir() || f.filter(path) == nil {
 			res = append(res, i)
 		}
 	}
