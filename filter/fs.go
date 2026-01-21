@@ -127,7 +127,7 @@ func (f *Fs) Open(name string) (afero.File, error) {
 		return nil, err
 	}
 	if !dir {
-		if err := f.matches(OpenOp{Name: name}); err != nil {
+		if err := f.matches(op.Open{Name: name}); err != nil {
 			return nil, err
 		}
 	}
@@ -170,7 +170,7 @@ func (f *Fs) RemoveAll(path string) error {
 		return err
 	}
 	if !dir {
-		if err = f.matches(RemoveAllOp{PathName: path}); err != nil {
+		if err = f.matches(op.RemoveAll{PathName: path}); err != nil {
 			return err
 		}
 	}
@@ -187,12 +187,12 @@ func (f *Fs) Rename(oldname string, newname string) error {
 	if dir {
 		return nil
 	}
-	op := RenameOp{Oldname: oldname, Newname: newname}
-	if err = f.matches(op); err != nil {
+	operation := op.Rename{Oldname: oldname, Newname: newname}
+	if err = f.matches(operation); err != nil {
 		return err
 	}
 	// Also check the new name
-	if err = f.matches(CreateOp{Name: newname}); err != nil {
+	if err = f.matches(op.Create{Name: newname}); err != nil {
 		return err
 	}
 
@@ -201,15 +201,15 @@ func (f *Fs) Rename(oldname string, newname string) error {
 
 // Stat implements afero.Fs.
 func (f *Fs) Stat(name string) (fs.FileInfo, error) {
-	if err := f.dirOrMatches(StatOp{Name: name}); err != nil {
+	if err := f.dirOrMatches(op.Stat{Name: name}); err != nil {
 		return nil, err
 	}
 
 	return f.src.Stat(name)
 }
 
-func (f *Fs) dirOrMatches(op Operation) error {
-	dir, err := afero.IsDir(f.src, op.Path())
+func (f *Fs) dirOrMatches(operation op.Operation) error {
+	dir, err := afero.IsDir(f.src, operation.Path())
 	if err != nil {
 		return err
 	}
