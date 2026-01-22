@@ -163,7 +163,7 @@ var _ = Describe("Fs", func() {
 		Expect(base.Mkdir("test", os.ModePerm)).To(Succeed())
 		err := afero.WriteFile(base, "test/file.txt", []byte("testing"), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
-		filtered := filter.NewFs(base, func(op op.Operation) bool {
+		filtered := filter.FromPredicate(base, func(op op.Operation) bool {
 			return filepath.Ext(op.Path()) != ".txt"
 		})
 		paths := []string{}
