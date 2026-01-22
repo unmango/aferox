@@ -22,10 +22,14 @@ var _ = Describe("File", func() {
 
 		BeforeEach(func() {
 			base = afero.NewMemMapFs()
-			err := afero.WriteFile(base, "test.txt", []byte("hello world"), os.ModePerm)
+			err := afero.WriteFile(base,
+				"test.txt",
+				[]byte("hello world"),
+				os.ModePerm,
+			)
 			Expect(err).To(Succeed())
 
-			filtered = filter.NewFs(base, func(o op.Operation) bool {
+			filtered = filter.FromPredicate(base, func(o op.Operation) bool {
 				return o.Path() == "test.txt"
 			})
 
@@ -73,8 +77,7 @@ var _ = Describe("File", func() {
 		})
 
 		It("should sync file", func() {
-			err := file.Sync()
-			Expect(err).NotTo(HaveOccurred())
+			Expect(file.Sync()).To(Succeed())
 		})
 
 		It("should truncate writable file", func() {
@@ -82,12 +85,10 @@ var _ = Describe("File", func() {
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
 
-			err = wf.Truncate(5)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(wf.Truncate(5)).To(Succeed())
 		})
 
 		It("should write to writable file", func() {
-			file.Close()
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
@@ -98,7 +99,6 @@ var _ = Describe("File", func() {
 		})
 
 		It("should write at offset in writable file", func() {
-			file.Close()
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
@@ -109,7 +109,6 @@ var _ = Describe("File", func() {
 		})
 
 		It("should write string to writable file", func() {
-			file.Close()
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
@@ -119,54 +118,43 @@ var _ = Describe("File", func() {
 			Expect(n).To(Equal(8))
 		})
 
-		Describe("Readdir", func() {
-			BeforeEach(func() {
-				Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
-				Expect(afero.WriteFile(base, "dir/file1.txt", []byte("1"), os.ModePerm)).To(Succeed())
-				Expect(afero.WriteFile(base, "dir/file2.go", []byte("2"), os.ModePerm)).To(Succeed())
-				Expect(base.Mkdir("dir/subdir", os.ModePerm)).To(Succeed())
+		It("should filter files in Readdir", func() {
+			Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
+			Expect(afero.WriteFile(base, "dir/file1.txt", []byte{}, os.ModePerm)).To(Succeed())
+			Expect(afero.WriteFile(base, "dir/file2.go", []byte{}, os.ModePerm)).To(Succeed())
+			Expect(base.Mkdir("dir/subdir", os.ModePerm)).To(Succeed())
 
-				filtered = filter.NewFs(base, func(o op.Operation) bool {
-					return filepath.Ext(o.Path()) == ".txt"
-				})
-
-				var err error
-				file, err = filtered.Open("dir")
-				Expect(err).NotTo(HaveOccurred())
+			filtered = filter.FromPredicate(base, func(o op.Operation) bool {
+				return filepath.Ext(o.Path()) == ".txt"
 			})
 
-			It("should filter files in Readdir", func() {
-				infos, err := file.Readdir(-1)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(infos).To(HaveLen(2))
-				names := []string{infos[0].Name(), infos[1].Name()}
-				Expect(names).To(ConsistOf("file1.txt", "subdir"))
-			})
+			var err error
+			file, err = filtered.Open("dir")
+			Expect(err).NotTo(HaveOccurred())
+
+			infos, err := file.Readdir(-1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(infos).To(HaveLen(2))
+			Expect(infos[0].Name()).To(Equal("file1.txt"))
+			Expect(infos[1].Name()).To(Equal("subdir"))
 		})
 
-		Describe("Readdirnames", func() {
-			BeforeEach(func() {
-				if file != nil {
-					file.Close()
-				}
-				Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
-				Expect(afero.WriteFile(base, "dir/file1.txt", []byte("1"), os.ModePerm)).To(Succeed())
-				Expect(afero.WriteFile(base, "dir/file2.go", []byte("2"), os.ModePerm)).To(Succeed())
+		It("should filter files in Readdirnames", func() {
+			Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
+			Expect(afero.WriteFile(base, "dir/file1.txt", []byte{}, os.ModePerm)).To(Succeed())
+			Expect(afero.WriteFile(base, "dir/file2.go", []byte{}, os.ModePerm)).To(Succeed())
 
-				filtered = filter.NewFs(base, func(o op.Operation) bool {
-					return filepath.Ext(o.Path()) == ".txt"
-				})
-
-				var err error
-				file, err = filtered.Open("dir")
-				Expect(err).NotTo(HaveOccurred())
+			filtered = filter.FromPredicate(base, func(o op.Operation) bool {
+				return filepath.Ext(o.Path()) == ".txt"
 			})
 
-			It("should filter files in Readdirnames", func() {
-				names, err := file.Readdirnames(-1)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(names).To(ConsistOf("file1.txt"))
-			})
+			var err error
+			file, err = filtered.Open("dir")
+			Expect(err).NotTo(HaveOccurred())
+
+			names, err := file.Readdirnames(-1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(names).To(ConsistOf("file1.txt"))
 		})
 	})
 
@@ -180,7 +168,7 @@ var _ = Describe("File", func() {
 				return base.Fs.OpenFile(name, os.O_RDWR, os.ModePerm)
 			}
 
-			filtered := filter.NewFs(base, func(o op.Operation) bool {
+			filtered := filter.FromPredicate(base, func(o op.Operation) bool {
 				return o.Path() == "test.txt"
 			})
 
@@ -224,7 +212,7 @@ var _ = Describe("File", func() {
 				}, nil
 			}
 
-			filtered := filter.NewFs(base, func(o op.Operation) bool {
+			filtered := filter.FromPredicate(base, func(o op.Operation) bool {
 				return true
 			})
 

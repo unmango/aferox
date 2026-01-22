@@ -18,41 +18,17 @@ type (
 	Predicate func(op.Operation) bool
 )
 
-func FromFilter(base afero.Fs, filter Filter) afero.Fs {
-	return &Fs{src: base, filter: filter}
-}
-
-func FromPredicateWithError(base afero.Fs, pred Predicate, onFalse error) afero.Fs {
-	return FromFilter(base, func(operation op.Operation) error {
+func FromPredicate(base afero.Fs, pred Predicate) afero.Fs {
+	return NewFs(base, func(operation op.Operation) error {
 		if pred(operation) {
 			return nil
 		}
-		return onFalse
+		return syscall.ENOENT
 	})
 }
 
-func FromPredicate(base afero.Fs, pred Predicate) afero.Fs {
-	return FromPredicateWithError(base, pred, syscall.ENOENT)
-}
-
-func NewFs(base afero.Fs, predicate Predicate) afero.Fs {
-	return FromPredicate(base, predicate)
-}
-
-// PathFilter creates a Filter from a path-based filter function.
-// This is a convenience function for backward compatibility.
-func PathFilter(fn func(string) error) Filter {
-	return func(operation op.Operation) error {
-		return fn(operation.Path())
-	}
-}
-
-// PathPredicate creates a Predicate from a path-based predicate function.
-// This is a convenience function for backward compatibility.
-func PathPredicate(fn func(string) bool) Predicate {
-	return func(operation op.Operation) bool {
-		return fn(operation.Path())
-	}
+func NewFs(base afero.Fs, filter Filter) afero.Fs {
+	return &Fs{src: base, filter: filter}
 }
 
 type Fs struct {
@@ -68,7 +44,6 @@ func (f *Fs) Chmod(name string, mode fs.FileMode) error {
 	}); err != nil {
 		return err
 	}
-
 	return f.src.Chmod(name, mode)
 }
 
