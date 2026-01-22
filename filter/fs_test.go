@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/filter"
+	"github.com/unmango/aferox/op"
 	"github.com/unmango/aferox/testing"
 )
 
@@ -29,8 +30,8 @@ var _ = Describe("Fs", func() {
 			var filterFs afero.Fs
 
 			BeforeEach(func() {
-				filterFs = newFsWithPathPredicate(baseFs, func(name string) bool {
-					return name == "not-test.txt"
+				filterFs = filter.NewFs(baseFs, func(o op.Operation) bool {
+					return o.Path() == "not-test.txt"
 				})
 			})
 
@@ -87,8 +88,8 @@ var _ = Describe("Fs", func() {
 			var filtered afero.Fs
 
 			BeforeEach(func() {
-				filtered = newFsWithPathPredicate(baseFs, func(name string) bool {
-					return name == "test.txt"
+				filtered = filter.NewFs(baseFs, func(o op.Operation) bool {
+					return o.Path() == "test.txt"
 				})
 			})
 
@@ -160,8 +161,8 @@ var _ = Describe("Fs", func() {
 		Expect(base.Mkdir("test", os.ModePerm)).To(Succeed())
 		err := afero.WriteFile(base, "test/file.txt", []byte("testing"), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
-		filtered := newFsWithPathPredicate(base, func(s string) bool {
-			return filepath.Ext(s) != ".txt"
+		filtered := filter.NewFs(base, func(o op.Operation) bool {
+			return filepath.Ext(o.Path()) != ".txt"
 		})
 		paths := []string{}
 
@@ -180,8 +181,8 @@ var _ = Describe("Fs", func() {
 		err := afero.WriteFile(base, "test/file.txt", []byte("testing"), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
 
-		filtered := newFsWithPathPredicate(base, func(s string) bool {
-			Expect(s).To(Equal("test/file.txt"))
+		filtered := filter.NewFs(base, func(o op.Operation) bool {
+			Expect(o.Path()).To(Equal("test/file.txt"))
 			return true
 		})
 
@@ -192,7 +193,9 @@ var _ = Describe("Fs", func() {
 	Describe("Mkdir", func() {
 		It("should create a directory", func() {
 			base := afero.NewMemMapFs()
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 
 			err := filtered.Mkdir("testdir", os.ModePerm)
 
@@ -206,7 +209,9 @@ var _ = Describe("Fs", func() {
 	Describe("MkdirAll", func() {
 		It("should create nested directories", func() {
 			base := afero.NewMemMapFs()
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 
 			err := filtered.MkdirAll("path/to/dir", os.ModePerm)
 
@@ -221,7 +226,9 @@ var _ = Describe("Fs", func() {
 		It("should remove a directory", func() {
 			base := afero.NewMemMapFs()
 			Expect(base.Mkdir("testdir", os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 
 			err := filtered.RemoveAll("testdir")
 
@@ -234,7 +241,9 @@ var _ = Describe("Fs", func() {
 		It("should remove a non-filtered file", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return s == "test.txt" })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return o.Path() == "test.txt"
+			})
 
 			err := filtered.RemoveAll("test.txt")
 
@@ -247,7 +256,9 @@ var _ = Describe("Fs", func() {
 		It("should not allow removing a filtered file", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return s != "test.txt" })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return o.Path() != "test.txt"
+			})
 
 			err := filtered.RemoveAll("test.txt")
 
@@ -259,7 +270,9 @@ var _ = Describe("Fs", func() {
 		It("should rename a non-filtered file", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return s == "old.txt" || s == "new.txt" })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return o.Path() == "old.txt" || o.Path() == "new.txt"
+			})
 
 			err := filtered.Rename("old.txt", "new.txt")
 
@@ -272,7 +285,9 @@ var _ = Describe("Fs", func() {
 		It("should not rename a filtered file", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return false })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return false
+			})
 
 			err := filtered.Rename("old.txt", "new.txt")
 
@@ -282,7 +297,9 @@ var _ = Describe("Fs", func() {
 		It("should not rename to a filtered name", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return s == "old.txt" })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return o.Path() == "old.txt"
+			})
 
 			err := filtered.Rename("old.txt", "new.txt")
 
@@ -292,7 +309,9 @@ var _ = Describe("Fs", func() {
 		It("should allow renaming directories", func() {
 			base := afero.NewMemMapFs()
 			Expect(base.Mkdir("olddir", os.ModePerm)).To(Succeed())
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return false })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return false
+			})
 
 			err := filtered.Rename("olddir", "newdir")
 
@@ -317,9 +336,15 @@ var _ = Describe("Fs", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "test.txt", []byte("test"), os.ModePerm)).To(Succeed())
 			customErr := fs.ErrPermission
-			filtered := fromPredicateWithErrorAndPath(base, func(s string) bool {
-				return s != "test.txt"
-			}, customErr)
+			// filtered := fromPredicateWithErrorAndPath(base, func(s string) bool {
+			// 	return s != "test.txt"
+			// }, customErr)
+			filtered := filter.FromPredicateWithError(base,
+				filter.PathPredicate(func(s string) bool {
+					return s != "test.txt"
+				}),
+				customErr,
+			)
 
 			_, err := filtered.Open("test.txt")
 			Expect(err).To(MatchError(customErr))
@@ -334,7 +359,9 @@ var _ = Describe("Fs", func() {
 				return nil, expectedErr
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 			_, err := filtered.Open("test.txt")
 
 			Expect(err).To(MatchError(expectedErr))
@@ -349,7 +376,9 @@ var _ = Describe("Fs", func() {
 				return nil, expectedErr
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 			_, err := filtered.Open("test.txt")
 
 			Expect(err).To(MatchError(expectedErr))
@@ -362,7 +391,9 @@ var _ = Describe("Fs", func() {
 				return nil, expectedErr
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 			err := filtered.RemoveAll("test.txt")
 
 			Expect(err).To(MatchError(expectedErr))
@@ -375,7 +406,9 @@ var _ = Describe("Fs", func() {
 				return nil, expectedErr
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 			err := filtered.Rename("old.txt", "new.txt")
 
 			Expect(err).To(MatchError(expectedErr))
@@ -388,7 +421,9 @@ var _ = Describe("Fs", func() {
 				return nil, expectedErr
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
 
 			// Test dirOrMatches through Stat
 			_, err := filtered.Stat("test.txt")

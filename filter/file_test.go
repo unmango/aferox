@@ -9,6 +9,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/spf13/afero"
+	"github.com/unmango/aferox/filter"
+	"github.com/unmango/aferox/op"
 	"github.com/unmango/aferox/testing"
 )
 
@@ -20,9 +22,13 @@ var _ = Describe("File", func() {
 
 		BeforeEach(func() {
 			base = afero.NewMemMapFs()
-			Expect(afero.WriteFile(base, "test.txt", []byte("hello world"), os.ModePerm)).To(Succeed())
-			filtered = newFsWithPathPredicate(base, func(s string) bool { return s == "test.txt" })
-			var err error
+			err := afero.WriteFile(base, "test.txt", []byte("hello world"), os.ModePerm)
+			Expect(err).To(Succeed())
+
+			filtered = filter.NewFs(base, func(o op.Operation) bool {
+				return o.Path() == "test.txt"
+			})
+
 			file, err = filtered.Open("test.txt")
 			Expect(err).NotTo(HaveOccurred())
 		})
@@ -72,7 +78,6 @@ var _ = Describe("File", func() {
 		})
 
 		It("should truncate writable file", func() {
-			file.Close()
 			wf, err := filtered.OpenFile("test.txt", os.O_RDWR, os.ModePerm)
 			Expect(err).NotTo(HaveOccurred())
 			defer wf.Close()
@@ -116,16 +121,13 @@ var _ = Describe("File", func() {
 
 		Describe("Readdir", func() {
 			BeforeEach(func() {
-				if file != nil {
-					file.Close()
-				}
 				Expect(base.Mkdir("dir", os.ModePerm)).To(Succeed())
 				Expect(afero.WriteFile(base, "dir/file1.txt", []byte("1"), os.ModePerm)).To(Succeed())
 				Expect(afero.WriteFile(base, "dir/file2.go", []byte("2"), os.ModePerm)).To(Succeed())
 				Expect(base.Mkdir("dir/subdir", os.ModePerm)).To(Succeed())
 
-				filtered = newFsWithPathPredicate(base, func(s string) bool {
-					return filepath.Ext(s) == ".txt"
+				filtered = filter.NewFs(base, func(o op.Operation) bool {
+					return filepath.Ext(o.Path()) == ".txt"
 				})
 
 				var err error
@@ -151,8 +153,8 @@ var _ = Describe("File", func() {
 				Expect(afero.WriteFile(base, "dir/file1.txt", []byte("1"), os.ModePerm)).To(Succeed())
 				Expect(afero.WriteFile(base, "dir/file2.go", []byte("2"), os.ModePerm)).To(Succeed())
 
-				filtered = newFsWithPathPredicate(base, func(s string) bool {
-					return filepath.Ext(s) == ".txt"
+				filtered = filter.NewFs(base, func(o op.Operation) bool {
+					return filepath.Ext(o.Path()) == ".txt"
 				})
 
 				var err error
@@ -178,7 +180,9 @@ var _ = Describe("File", func() {
 				return base.Fs.OpenFile(name, os.O_RDWR, os.ModePerm)
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return s == "test.txt" })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return o.Path() == "test.txt"
+			})
 
 			// Now Open will return a File wrapper around a writable file
 			file, err := filtered.Open("test.txt")
@@ -220,7 +224,10 @@ var _ = Describe("File", func() {
 				}, nil
 			}
 
-			filtered := newFsWithPathPredicate(base, func(s string) bool { return true })
+			filtered := filter.NewFs(base, func(o op.Operation) bool {
+				return true
+			})
+
 			f, err := filtered.Open("dir")
 			Expect(err).NotTo(HaveOccurred())
 			defer f.Close()
