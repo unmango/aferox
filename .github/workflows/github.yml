@@ -31,9 +31,17 @@ jobs:
           go -C github tool ginkgo run -r \
           --github-output \
           --race \
-          --trace
+          --trace \
+          --coverprofile=cover.profile
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          files: cover.profile
+          name: aferox/github
 
   nix:
     runs-on: ubuntu-latest
