@@ -2,14 +2,16 @@ package gitignore_test
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	ignore "github.com/sabhiram/go-gitignore"
 
+	ignore "github.com/sabhiram/go-gitignore"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/gitignore"
+	"github.com/unmango/aferox/testing"
 )
 
 type ignoreStub string
@@ -20,6 +22,12 @@ func (s ignoreStub) MatchesPathHow(f string) (bool, *ignore.IgnorePattern) {
 
 func (s ignoreStub) MatchesPath(p string) bool {
 	return string(s) == p
+}
+
+type errorReader struct{}
+
+func (e *errorReader) Read(p []byte) (n int, err error) {
+	return 0, fmt.Errorf("read error")
 }
 
 var _ = Describe("Fs", func() {
@@ -97,6 +105,15 @@ var _ = Describe("Fs", func() {
 			_, err = fs.Stat("blah.txt")
 			Expect(err).NotTo(HaveOccurred())
 		})
+
+		It("should return read errors", func() {
+			buf := &errorReader{}
+
+			fs, err := gitignore.NewFsFromReader(base, buf)
+
+			Expect(err).To(MatchError("scanning ignore lines: read error"))
+			Expect(fs).To(BeNil())
+		})
 	})
 
 	Describe("NewFsFromFile", func() {
@@ -124,6 +141,17 @@ var _ = Describe("Fs", func() {
 			Expect(err).NotTo(HaveOccurred())
 			_, err = fs.Stat("blah.txt")
 			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("should return open errors", func() {
+			base = &testing.ErrorFs{
+				OpenErr: fmt.Errorf("test error"),
+			}
+
+			fs, err := gitignore.NewFsFromFile(base, "git.ignore")
+
+			Expect(err).To(MatchError("opening ignore file: test error"))
+			Expect(fs).To(BeNil())
 		})
 	})
 

@@ -1,13 +1,12 @@
 bin/
 report.json
-cover.profile
 *.out
 go.work*
 .vscode/settings.json
 .make/
 *.test
 .envrc
-result
+/result
 .direnv/
-coverage.*
+cover*
 *.bak
