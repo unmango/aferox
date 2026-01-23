@@ -58,8 +58,8 @@ var _ = Describe("Op", func() {
 
 		It("should implement Operation for MkdirAll", func() {
 			var operation op.Operation = op.MkdirAll{
-				PathName: "path/to/dir",
-				Perm:     0755,
+				Name: "path/to/dir",
+				Perm: 0755,
 			}
 
 			Expect(operation.Path()).To(Equal("path/to/dir"))
@@ -88,7 +88,7 @@ var _ = Describe("Op", func() {
 		})
 
 		It("should implement Operation for RemoveAll", func() {
-			var operation op.Operation = op.RemoveAll{PathName: "testdir"}
+			var operation op.Operation = op.RemoveAll{Name: "testdir"}
 
 			Expect(operation.Path()).To(Equal("testdir"))
 		})

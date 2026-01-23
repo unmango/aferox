@@ -302,7 +302,12 @@ var _ = Describe("Fs", func() {
 			base := afero.NewMemMapFs()
 			Expect(afero.WriteFile(base, "old.txt", []byte("test"), os.ModePerm)).To(Succeed())
 			filtered := filter.FromPredicate(base, func(o op.Operation) bool {
-				return o.Path() == "old.txt"
+				switch o := o.(type) {
+				case op.Rename:
+					return o.Newname != "new.txt"
+				default:
+					return o.Path() == "old.txt"
+				}
 			})
 
 			err := filtered.Rename("old.txt", "new.txt")

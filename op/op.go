@@ -54,11 +54,11 @@ func (o Mkdir) Path() string { return o.Name }
 
 // MkdirAll represents a mkdir -p operation.
 type MkdirAll struct {
-	PathName string
-	Perm     fs.FileMode
+	Name string
+	Perm fs.FileMode
 }
 
-func (o MkdirAll) Path() string { return o.PathName }
+func (o MkdirAll) Path() string { return o.Name }
 
 // Open represents an open operation.
 type Open struct {
@@ -85,10 +85,10 @@ func (o Remove) Path() string { return o.Name }
 
 // RemoveAll represents a remove -r operation.
 type RemoveAll struct {
-	PathName string
+	Name string
 }
 
-func (o RemoveAll) Path() string { return o.PathName }
+func (o RemoveAll) Path() string { return o.Name }
 
 // Rename represents a rename/move operation.
 type Rename struct {

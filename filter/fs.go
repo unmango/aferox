@@ -87,7 +87,7 @@ func (f *Fs) Mkdir(name string, perm fs.FileMode) error {
 
 // MkdirAll implements afero.Fs.
 func (f *Fs) MkdirAll(path string, perm fs.FileMode) error {
-	return f.src.Mkdir(path, perm)
+	return f.src.MkdirAll(path, perm)
 }
 
 // Name implements afero.Fs.
@@ -145,7 +145,7 @@ func (f *Fs) RemoveAll(path string) error {
 		return err
 	}
 	if !dir {
-		if err = f.matches(op.RemoveAll{PathName: path}); err != nil {
+		if err = f.matches(op.RemoveAll{Name: path}); err != nil {
 			return err
 		}
 	}
@@ -164,10 +164,6 @@ func (f *Fs) Rename(oldname string, newname string) error {
 	}
 	operation := op.Rename{Oldname: oldname, Newname: newname}
 	if err = f.matches(operation); err != nil {
-		return err
-	}
-	// Also check the new name
-	if err = f.matches(op.Create{Name: newname}); err != nil {
 		return err
 	}
 
