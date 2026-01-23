@@ -12,7 +12,9 @@ on:
       - .github/workflows/gitignore.yml
       - gitignore/*
 
+
 permissions:
+  id-token: write
   contents: read
 
 jobs:
