@@ -20,7 +20,7 @@ func NewFsFromLines(base afero.Fs, lines ...string) afero.Fs {
 }
 
 func NewFsFromIgnore(base afero.Fs, ignore Ignore) afero.Fs {
-	return filter.NewFs(base, func(op op.Operation) bool {
+	return filter.FromPredicate(base, func(op op.Operation) bool {
 		return !ignore.MatchesPath(op.Path())
 	})
 }
