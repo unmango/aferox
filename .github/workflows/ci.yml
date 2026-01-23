@@ -38,6 +38,7 @@ jobs:
         with:
           use_oidc: true
           files: cover.profile
+          name: aferox
 
   nix:
     runs-on: ubuntu-latest

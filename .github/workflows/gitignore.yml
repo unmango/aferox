@@ -12,7 +12,9 @@ on:
       - .github/workflows/gitignore.yml
       - gitignore/*
 
+
 permissions:
+  id-token: write
   contents: read
 
 jobs:
@@ -31,7 +33,15 @@ jobs:
           go -C gitignore tool ginkgo run -r \
           --github-output \
           --race \
-          --trace
+          --trace \
+          --coverprofile=cover.profile
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          files: cover.profile
+          name: aferox/gitignore
 
   nix:
     runs-on: ubuntu-latest
