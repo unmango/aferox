@@ -10,3 +10,4 @@ go.work*
 result
 .direnv/
 coverage.*
+*.bak

@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/filter"
 	"github.com/unmango/aferox/ignore"
+	"github.com/unmango/aferox/op"
 )
 
 type ignoreStub string
@@ -162,8 +163,8 @@ var _ = Describe("Fs", func() {
 		Expect(base.Mkdir("test", os.ModePerm)).To(Succeed())
 		err := afero.WriteFile(base, "test/file.txt", []byte("testing"), os.ModePerm)
 		Expect(err).NotTo(HaveOccurred())
-		filtered := filter.NewFs(base, func(s string) bool {
-			return filepath.Ext(s) != ".txt"
+		filtered := filter.FromPredicate(base, func(op op.Operation) bool {
+			return filepath.Ext(op.Path()) != ".txt"
 		})
 		paths := []string{}
 
