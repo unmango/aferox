@@ -1,5 +1,7 @@
 buf.build/gen/go/unmango/protofs/grpc/go v1.6.0-20250613050322-304b4fb5d9b0.1 h1:fX85k1QmZwwFWyPqurP0aO70KsSbNb/BhCxkGu7bOxc=
 buf.build/gen/go/unmango/protofs/grpc/go v1.6.0-20250613050322-304b4fb5d9b0.1/go.mod h1:Nxdv3iVmpQYbGq/2NWaJheflc+oow8/9UDQGgEfRMd8=
+buf.build/gen/go/unmango/protofs/grpc/go v1.6.1-20250613050322-304b4fb5d9b0.1 h1:u8YbKSKLsr4tZoqTYKXw7jmMBwMSRho/X/pvjTWj8B0=
+buf.build/gen/go/unmango/protofs/grpc/go v1.6.1-20250613050322-304b4fb5d9b0.1/go.mod h1:77VDHmiNVHuILYT5fUqKH8NeH06YUw8yYwXqSP1heBU=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.11-20250613050322-304b4fb5d9b0.1 h1:7wl015ZhaSoeRZXz0jeLwbCIY4WnJ2DPeYEXBSOHYfk=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.11-20250613050322-304b4fb5d9b0.1/go.mod h1:gocXTE2sK1IBSgCV6MoXoSmzc6+Kpwxw1zpifCRCeb4=
 github.com/Masterminds/semver/v3 v3.4.0 h1:Zog+i5UMtVoCU8oKka5P7i9q9HgrJeGzI9SA1Xbatp0=
