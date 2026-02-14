@@ -9,7 +9,7 @@ require (
 	github.com/google/go-github/v81 v81.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.28.1
-	github.com/onsi/gomega v1.39.0
+	github.com/onsi/gomega v1.39.1
 	github.com/spf13/afero v1.15.0
 )
 
