@@ -6,7 +6,7 @@ import (
 	"io/fs"
 	"os"
 
-	"github.com/google/go-github/v81/github"
+	"github.com/google/go-github/v82/github"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/github/ghpath"
 	"github.com/unmango/aferox/github/internal"

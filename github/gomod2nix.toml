@@ -46,12 +46,12 @@ schema = 3
   [mod."github.com/google/go-cmp"]
     version = "v0.7.0"
     hash = "sha256-JbxZFBFGCh/Rj5XZ1vG94V2x7c18L8XKB0N9ZD5F2rM="
-  [mod."github.com/google/go-github/v81"]
-    version = "v81.0.0"
-    hash = "sha256-+ufveUz5MphSn3KVU0v+5mlV0sPyeZC5g7jyR37kg0Q="
+  [mod."github.com/google/go-github/v82"]
+    version = "v82.0.0"
+    hash = "sha256-cCZzbzsAtXVIBSmWgCQzZzu2Qdd//4aYKnbHl0YUJdA="
   [mod."github.com/google/go-querystring"]
-    version = "v1.1.0"
-    hash = "sha256-itsKgKghuX26czU79cK6C2n+lc27jm5Dw1XbIRgwZJY="
+    version = "v1.2.0"
+    hash = "sha256-F/Ve4oDaEqho8RryvdGSRR22/DbYHWZQa6M60n6oSYM="
   [mod."github.com/google/pprof"]
     version = "v0.0.0-20260115054156-294ebfa9ad83"
     hash = "sha256-fhalKl/thSt1gdsHZmFyNGF1Gwxb0YLXV0pBv65EZjE="
@@ -71,11 +71,11 @@ schema = 3
     version = "v0.16.0"
     hash = "sha256-hGo275DJlyLtcifSLpWnk8jardOksdeX9lH4lBeE3gI="
   [mod."github.com/onsi/ginkgo/v2"]
-    version = "v2.27.5"
-    hash = "sha256-4YtMCQDR+odfRReIah0jHLXFdG8UyX+EOaDT00XpMr0="
+    version = "v2.28.1"
+    hash = "sha256-ndaovLQb6s4cztI8MXXJajJDY1kMsuz5zEbVjlfKgAE="
   [mod."github.com/onsi/gomega"]
-    version = "v1.39.0"
-    hash = "sha256-in2eEUjcDC3JGDSAQxBI/mWdT0E2X1yCBKoGXemlWaE="
+    version = "v1.39.1"
+    hash = "sha256-ZlbQhUVwQBzmhBWCQ9iPWoJOVr+OqqIHB4iCNDFMEds="
   [mod."github.com/pmezard/go-difflib"]
     version = "v1.0.1-0.20181226105442-5d4384ee4fb2"
     hash = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90="
