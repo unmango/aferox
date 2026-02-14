@@ -7,7 +7,7 @@
     {
       packages.aferox-github = buildGoApplication {
         pname = "aferox-github";
-        version = "0.0.4";
+        version = "0.0.5";
         src = ./.;
         modules = ./gomod2nix.toml;
 
