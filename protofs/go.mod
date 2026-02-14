@@ -8,7 +8,7 @@ require (
 	buf.build/gen/go/unmango/protofs/grpc/go v1.6.0-20250613050322-304b4fb5d9b0.1
 	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.11-20250613050322-304b4fb5d9b0.1
 	github.com/onsi/ginkgo/v2 v2.28.1
-	github.com/onsi/gomega v1.39.0
+	github.com/onsi/gomega v1.39.1
 	github.com/spf13/afero v1.15.0
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
