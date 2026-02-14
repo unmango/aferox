@@ -110,11 +110,11 @@ schema = 3
     version = "v1.0.0"
     hash = "sha256-5zYgLeGr3K+uhGKlN3xv0PO67V+2Zw+cezjzNCmAWOE="
   [mod."github.com/onsi/ginkgo/v2"]
-    version = "v2.27.5"
-    hash = "sha256-4YtMCQDR+odfRReIah0jHLXFdG8UyX+EOaDT00XpMr0="
+    version = "v2.28.1"
+    hash = "sha256-ndaovLQb6s4cztI8MXXJajJDY1kMsuz5zEbVjlfKgAE="
   [mod."github.com/onsi/gomega"]
-    version = "v1.39.0"
-    hash = "sha256-in2eEUjcDC3JGDSAQxBI/mWdT0E2X1yCBKoGXemlWaE="
+    version = "v1.39.1"
+    hash = "sha256-ZlbQhUVwQBzmhBWCQ9iPWoJOVr+OqqIHB4iCNDFMEds="
   [mod."github.com/opencontainers/go-digest"]
     version = "v1.0.0"
     hash = "sha256-cfVDjHyWItmUGZ2dzQhCHgmOmou8v7N+itDkLZVkqkQ="

@@ -2,8 +2,8 @@ schema = 3
 
 [mod]
   [mod."buf.build/gen/go/unmango/protofs/grpc/go"]
-    version = "v1.6.0-20250613050322-304b4fb5d9b0.1"
-    hash = "sha256-OFn6zYlADhKDZgGJ9B3QziucgIzrafD6+TagJPvG06M="
+    version = "v1.6.1-20250613050322-304b4fb5d9b0.1"
+    hash = "sha256-xBRIKwYDPtknTxxt4TP8e2tmOC8ShDtynfKOWXwtCxo="
   [mod."buf.build/gen/go/unmango/protofs/protocolbuffers/go"]
     version = "v1.36.11-20250613050322-304b4fb5d9b0.1"
     hash = "sha256-U/7HRWEPxBPE9RjKkNmfVRoxLoVDq/m8ne0qq3L5uT0="
@@ -29,11 +29,11 @@ schema = 3
     version = "v0.0.0-20260115054156-294ebfa9ad83"
     hash = "sha256-fhalKl/thSt1gdsHZmFyNGF1Gwxb0YLXV0pBv65EZjE="
   [mod."github.com/onsi/ginkgo/v2"]
-    version = "v2.27.5"
-    hash = "sha256-4YtMCQDR+odfRReIah0jHLXFdG8UyX+EOaDT00XpMr0="
+    version = "v2.28.1"
+    hash = "sha256-ndaovLQb6s4cztI8MXXJajJDY1kMsuz5zEbVjlfKgAE="
   [mod."github.com/onsi/gomega"]
-    version = "v1.39.0"
-    hash = "sha256-in2eEUjcDC3JGDSAQxBI/mWdT0E2X1yCBKoGXemlWaE="
+    version = "v1.39.1"
+    hash = "sha256-ZlbQhUVwQBzmhBWCQ9iPWoJOVr+OqqIHB4iCNDFMEds="
   [mod."github.com/pmezard/go-difflib"]
     version = "v1.0.1-0.20181226105442-5d4384ee4fb2"
     hash = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90="
@@ -71,8 +71,8 @@ schema = 3
     version = "v0.0.0-20251222181119-0a764e51fe1b"
     hash = "sha256-gdgUw1LzgVOrarF1cGBUI9uoaR/d6lur2RwxUDKnOZA="
   [mod."google.golang.org/grpc"]
-    version = "v1.78.0"
-    hash = "sha256-oKsu3+Eae5tpFOZ9K2ZzYh1FgdYdEnEIB1C+UIxSD+E="
+    version = "v1.79.1"
+    hash = "sha256-qJzroXZYo57MBIswxVVlXQuK/ubK1k9dAkD5btKCa4Y="
   [mod."google.golang.org/protobuf"]
     version = "v1.36.11"
     hash = "sha256-7W+6jntfI/awWL3JP6yQedxqP5S9o3XvPgJ2XxxsIeE="
@@ -80,5 +80,5 @@ schema = 3
     version = "v1.0.0-20201130134442-10cb98267c6c"
     hash = "sha256-VlIpM2r/OD+kkyItn6vW35dyc0rtkJufA93rjFyzncs="
   [mod."k8s.io/utils"]
-    version = "v0.0.0-20260108192941-914a6e750570"
-    hash = "sha256-eFcd1fZT9M7wc/foeEAUj3jgHJfEY9U3lVqQTkIVJ44="
+    version = "v0.0.0-20260210185600-b8788abfbbc2"
+    hash = "sha256-yV4Uv2+bUhZlAIbxc9YYzjzrBnpN5iN5dQELKeJ5dZM="
