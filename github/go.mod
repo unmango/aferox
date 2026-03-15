@@ -5,7 +5,7 @@ go 1.25.5
 tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
-	github.com/charmbracelet/log v0.4.2
+	github.com/charmbracelet/log/v2 v2.0.0
 	github.com/google/go-github/v84 v84.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.28.1
