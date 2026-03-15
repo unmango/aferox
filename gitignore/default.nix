@@ -14,6 +14,7 @@
         version = "0.0.1";
         src = ./.;
         modules = ./gomod2nix.toml;
+        go = pkgs.go_1_26;
 
         nativeBuildInputs = [
           pkgs.ginkgo
