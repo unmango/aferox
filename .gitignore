@@ -10,3 +10,4 @@ go.work*
 .direnv/
 cover*
 *.bak
+.claude/
