@@ -5,7 +5,7 @@ go 1.25.6
 tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
-	github.com/google/go-containerregistry v0.21.1
+	github.com/google/go-containerregistry v0.21.2
 	github.com/onsi/ginkgo/v2 v2.28.1
 	github.com/onsi/gomega v1.39.1
 	github.com/spf13/afero v1.15.0
