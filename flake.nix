@@ -41,6 +41,7 @@
         let
           inherit (inputs'.gomod2nix.legacyPackages) buildGoApplication mkGoEnv;
 
+          go = pkgs.go_1_26;
           goEnv = mkGoEnv { pwd = ./.; };
 
           aferox = buildGoApplication {
@@ -48,6 +49,7 @@
             version = "0.3.3";
             src = ./.;
             modules = ./gomod2nix.toml;
+            go = go;
 
             subPackages = [ "." ];
 
