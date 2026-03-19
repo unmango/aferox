@@ -3,15 +3,15 @@ package github
 import (
 	"io/fs"
 
-	gogithub "github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v84/github"
 	"github.com/spf13/afero"
 	"github.com/unmango/aferox/github/internal"
 	"github.com/unstoppablemango/ihfs/ghfs"
 )
 
-type Client = gogithub.Client
+type Client = github.Client
 
-var NewClient = gogithub.NewClient
+var NewClient = github.NewClient
 
 type Fs struct {
 	internal.ReadOnlyFs
@@ -47,7 +47,7 @@ func (f *Fs) Stat(name string) (fs.FileInfo, error) {
 	return file.Stat()
 }
 
-func NewFs(gh *gogithub.Client) afero.Fs {
+func NewFs(gh *github.Client) afero.Fs {
 	if gh == nil {
 		gh = internal.DefaultClient()
 	}
