@@ -37,7 +37,7 @@ jobs:
           --coverprofile=cover.profile
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           use_oidc: true
           files: cover.profile
