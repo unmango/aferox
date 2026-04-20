@@ -34,7 +34,7 @@ jobs:
           --skip-package containerregistry,docker,github,gitignore,protofs
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           use_oidc: true
           files: cover.profile
