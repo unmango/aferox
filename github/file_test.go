@@ -1,4 +1,4 @@
-package user_test
+package github_test
 
 import (
 	"io"
@@ -6,13 +6,13 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/unmango/aferox/github/user"
+	ghx "github.com/unmango/aferox/github"
 )
 
 var _ = Describe("File", func() {
 	It("should list repositories", func() {
-		fs := user.NewFs(client)
-		file, err := fs.Open("UnstoppableMango")
+		fs := ghx.NewFs(client)
+		file, err := fs.Open("users/UnstoppableMango")
 		Expect(err).NotTo(HaveOccurred())
 
 		names, err := file.Readdirnames(69)
@@ -22,14 +22,14 @@ var _ = Describe("File", func() {
 	})
 
 	It("should read json", func() {
-		fs := user.NewFs(client)
-		file, err := fs.Open("UnstoppableMango")
+		fs := ghx.NewFs(client)
+		file, err := fs.Open("users/UnstoppableMango")
 		Expect(err).NotTo(HaveOccurred())
 
 		data, err := io.ReadAll(file)
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(data).To(And(
+		Expect(string(data)).To(And(
 			ContainSubstring("login"),
 			ContainSubstring("UnstoppableMango"),
 		))
@@ -37,17 +37,17 @@ var _ = Describe("File", func() {
 	})
 
 	It("should Open user", func() {
-		fs := user.NewFs(client)
+		fs := ghx.NewFs(client)
 
-		file, err := fs.Open("UnstoppableMango")
+		file, err := fs.Open("users/UnstoppableMango")
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(file.Name()).To(Equal("UnstoppableMango"))
+		Expect(file.Name()).To(Equal("users/UnstoppableMango"))
 	})
 
 	It("should be readonly", func() {
-		fs := user.NewFs(client)
-		file, err := fs.Open("UnstoppableMango")
+		fs := ghx.NewFs(client)
+		file, err := fs.Open("users/UnstoppableMango")
 		Expect(err).NotTo(HaveOccurred())
 
 		_, err = file.Write([]byte{})
@@ -56,5 +56,18 @@ var _ = Describe("File", func() {
 		Expect(err).To(MatchError("read-only file system"))
 		_, err = file.WriteString("doesn't matter")
 		Expect(err).To(MatchError("read-only file system"))
+	})
+
+	It("should read archive as directory", Label("E2E"), func() {
+		fs := ghx.NewFs(client)
+		file, err := fs.Open("github.com/UnstoppableMango/tdl/releases/tag/v0.0.29/tdl-linux-amd64.tar.gz")
+		Expect(err).NotTo(HaveOccurred())
+
+		stat, err := file.Stat()
+		Expect(err).NotTo(HaveOccurred())
+		Expect(stat.IsDir()).To(BeTrueBecause("treat archives as directories"))
+		names, err := file.Readdirnames(3)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(names).To(ConsistOf("uml2ts", "uml2go", "uml2pcl"))
 	})
 })
