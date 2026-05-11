@@ -8,7 +8,7 @@ import (
 	"io/fs"
 	"syscall"
 
-	"github.com/google/go-github/v85/github"
+	"github.com/google/go-github/v86/github"
 	"github.com/unmango/aferox/github/ghpath"
 	"github.com/unmango/aferox/github/internal"
 	"github.com/unmango/aferox/github/repository/release"
