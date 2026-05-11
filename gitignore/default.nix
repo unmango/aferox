@@ -3,6 +3,7 @@
     {
       inputs',
       pkgs,
+      lib,
       ...
     }:
     let
@@ -12,7 +13,7 @@
       packages.aferox-gitignore = buildGoApplication {
         pname = "aferox-gitignore";
         version = "0.0.1";
-        src = ./.;
+        src = lib.cleanSource ./.;
         modules = ./gomod2nix.toml;
         go = pkgs.go_1_26;
 

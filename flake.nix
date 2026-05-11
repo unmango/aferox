@@ -35,19 +35,19 @@
         {
           inputs',
           pkgs,
+          lib,
           system,
           ...
         }:
         let
-          inherit (inputs'.gomod2nix.legacyPackages) buildGoApplication mkGoEnv;
+          inherit (inputs'.gomod2nix.legacyPackages) buildGoApplication;
 
           go = pkgs.go_1_26;
-          goEnv = mkGoEnv { pwd = ./.; };
 
           aferox = buildGoApplication {
             pname = "aferox";
             version = "0.3.3";
-            src = ./.;
+            src = lib.cleanSource ./.;
             modules = ./gomod2nix.toml;
             go = go;
 
@@ -70,12 +70,12 @@
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
               docker
-              goEnv
               git
               ginkgo
               gnumake
               go
               gomod2nix
+              gopls
             ];
           };
 

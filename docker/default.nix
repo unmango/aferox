@@ -3,6 +3,7 @@
     {
       inputs',
       pkgs,
+      lib,
       ...
     }:
     let
@@ -11,7 +12,7 @@
       docker = buildGoApplication {
         pname = "aferox-docker";
         version = "0.0.3";
-        src = ./.;
+        src = lib.cleanSource ./.;
         modules = ./gomod2nix.toml;
         go = pkgs.go_1_26;
 
