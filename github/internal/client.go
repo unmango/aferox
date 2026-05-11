@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/google/go-github/v85/github"
+	"github.com/google/go-github/v86/github"
 )
 
 func DefaultClient() *github.Client {
