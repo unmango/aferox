@@ -6,7 +6,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
 	github.com/onsi/ginkgo/v2 v2.28.3
-	github.com/onsi/gomega v1.40.0
+	github.com/onsi/gomega v1.41.0
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06
 	github.com/spf13/afero v1.15.0
 	github.com/unmango/aferox v0.5.0
