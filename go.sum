@@ -195,8 +195,10 @@ github.com/tidwall/sjson v1.2.5/go.mod h1:Fvgq9kS/6ociJEDnK0Fk1cpYF4FIW6ZF7LAe+6
 github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=
 github.com/unmango/aferox/github v0.0.4 h1:GIGa07cEgizVL+lLikwrjp23N3M1ysZkuWHYQW9TWek=
 github.com/unmango/aferox/github v0.0.4/go.mod h1:Pm6syvix97VE7OAmRgqIQqMhs96fSnpjIVK9AyB9c4Q=
+github.com/unmango/aferox/github v0.0.6/go.mod h1:36Qt4PpCWbFh/Yvf8BtBc22SmRASwOfEdJBe5MTscNg=
 github.com/unmango/devctl v0.3.1 h1:ry67syHPg/cHomUi4t3RfZbCbAUnpLol8MHI8l8rVlY=
 github.com/unmango/devctl v0.3.1/go.mod h1:u4oWRJ4jWJ/CaI5rQw+o/c3oj+1wJVCdlcd8EiPtERg=
+github.com/unmango/devctl v0.4.0/go.mod h1:fTIbQZ5C32qoCLujKvWja8E4lUyjoiNYMIcgNwsZYqc=
 github.com/unmango/go v0.15.1 h1:JvZg+4baEAKypm68LhZisu0KeZeXmZ9yewfjV19JQuA=
 github.com/unmango/go v0.15.1/go.mod h1:kHGDNngCnYp+2XKvPeniSLHDTU81cE+Dc1eNtSA1gZw=
 github.com/unmango/go v0.16.2 h1:28zH6ApCKS+vtOPIroy0czpGOxA1jDwtwtGmF19YcxA=
