@@ -4,6 +4,8 @@ buf.build/gen/go/unmango/protofs/grpc/go v1.6.2-20250613050322-304b4fb5d9b0.1 h1
 buf.build/gen/go/unmango/protofs/grpc/go v1.6.2-20250613050322-304b4fb5d9b0.1/go.mod h1:FmPQU7szNXcbvfTjkAJHib4SaSoCkjL6u/lr2lxkCMg=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.11-20250613050322-304b4fb5d9b0.1 h1:7wl015ZhaSoeRZXz0jeLwbCIY4WnJ2DPeYEXBSOHYfk=
 buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.11-20250613050322-304b4fb5d9b0.1/go.mod h1:gocXTE2sK1IBSgCV6MoXoSmzc6+Kpwxw1zpifCRCeb4=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.12-20250613050322-304b4fb5d9b0.2 h1:Y6tf7OgfjMcV5hW/WBzCsuURnbzuCrArUXASKspXFAU=
+buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.12-20250613050322-304b4fb5d9b0.2/go.mod h1:unaod+cTZOmgLflRNAxg0KWMyxboKAJzKaaNSLBQ77k=
 github.com/Masterminds/semver/v3 v3.4.0 h1:Zog+i5UMtVoCU8oKka5P7i9q9HgrJeGzI9SA1Xbatp0=
 github.com/Masterminds/semver/v3 v3.4.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
@@ -127,6 +129,8 @@ google.golang.org/grpc v1.81.1 h1:VnnIIZ88UzOOKLukQi+ImGz8O1Wdp8nAGGnvOfEIWQQ=
 google.golang.org/grpc v1.81.1/go.mod h1:xGH9GfzOyMTGIOXBJmXt+BX/V0kcdQbdcuwQ/zNw42I=
 google.golang.org/protobuf v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=
 google.golang.org/protobuf v1.36.11/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
+google.golang.org/protobuf v1.36.12 h1:pJOKDDOyeXErUroCihFAd5LQuwXBSpVnKGrj5o/fwxc=
+google.golang.org/protobuf v1.36.12/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c h1:Hei/4ADfdWqJk1ZMxUNpqntNwaWcugrBjAiHlqqRiVk=
 gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c/go.mod h1:JHkPIbrfpd72SG/EVd6muEfDQjcINNoR0C8j2r3qZ4Q=
