@@ -11,7 +11,7 @@ require (
 	github.com/onsi/gomega v1.41.0
 	github.com/spf13/afero v1.15.0
 	google.golang.org/grpc v1.81.1
-	google.golang.org/protobuf v1.36.11
+	google.golang.org/protobuf v1.36.12
 	k8s.io/utils v0.0.0-20260507154919-ff6756f316d2
 )
 
