@@ -6,7 +6,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
 	buf.build/gen/go/unmango/protofs/grpc/go v1.6.2-20250613050322-304b4fb5d9b0.1
-	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.11-20250613050322-304b4fb5d9b0.1
+	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.12-20250613050322-304b4fb5d9b0.2
 	github.com/onsi/ginkgo/v2 v2.29.0
 	github.com/onsi/gomega v1.41.0
 	github.com/spf13/afero v1.15.0
