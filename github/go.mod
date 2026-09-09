@@ -1,12 +1,13 @@
 module github.com/unmango/aferox/github
 
-go 1.25.8
+go 1.26.0
 
 tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
 	charm.land/log/v2 v2.0.0
 	github.com/google/go-github/v86 v86.0.0
+	github.com/google/go-github/v91 v91.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.29.0
 	github.com/onsi/gomega v1.41.0
