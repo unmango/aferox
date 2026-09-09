@@ -7,7 +7,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 require (
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/onsi/ginkgo/v2 v2.29.0
-	github.com/onsi/gomega v1.41.0
+	github.com/onsi/gomega v1.43.0
 	github.com/spf13/afero v1.15.0
 	github.com/testcontainers/testcontainers-go v0.44.0
 	github.com/unmango/aferox v0.3.3
