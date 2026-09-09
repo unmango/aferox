@@ -12,7 +12,7 @@ require (
 	github.com/spf13/afero v1.15.0
 	google.golang.org/grpc v1.81.1
 	google.golang.org/protobuf v1.36.12
-	k8s.io/utils v0.0.0-20260507154919-ff6756f316d2
+	k8s.io/utils v0.0.0-20260707023825-cf1189d6abe3
 )
 
 require (
