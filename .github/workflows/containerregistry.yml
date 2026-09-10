@@ -1,0 +1,55 @@
+name: go-containerregistry
+
+on:
+  push:
+    # For code coverage reports
+    branches: [main]
+    paths:
+      - .github/workflows/containerregistry.yml
+      - containerregistry/*
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/containerregistry.yml
+      - containerregistry/*
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: containerregistry/go.mod
+          cache-dependency-path: containerregistry/go.sum
+
+      - run: |
+          go -C containerregistry tool ginkgo run -r \
+          --github-output \
+          --race \
+          --trace \
+          --coverprofile=cover.profile
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: true
+          files: cover.profile
+          name: aferox/containerregistry
+
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31.11.1
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: nix build .#aferox-containerregistry

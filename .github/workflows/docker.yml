@@ -1,0 +1,44 @@
+name: Docker
+
+on:
+  push:
+    # For code coverage reports
+    branches: [main]
+    paths:
+      - .github/workflows/docker.yml
+      - docker/*
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/docker.yml
+      - docker/*
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: docker/go.mod
+          cache-dependency-path: docker/go.sum
+
+      - run: |
+          go -C docker tool ginkgo run -r \
+          --github-output \
+          --race \
+          --trace \
+          --coverprofile=cover.profile
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: true
+          files: cover.profile
+          name: aferox/docker

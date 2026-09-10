@@ -1,0 +1,90 @@
+{
+  description = "Implementations and utilities for github.com/spf13/afero";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    systems.url = "github:UnstoppableMango/nix-systems";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    gomod2nix = {
+      url = "github:nix-community/gomod2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = import inputs.systems;
+
+      imports = [
+        inputs.systems.flakeModule
+
+        inputs.treefmt-nix.flakeModule
+        ./containerregistry
+        ./docker
+        ./github
+        ./gitignore
+        ./protofs
+      ];
+
+      perSystem =
+        {
+          inputs',
+          pkgs,
+          lib,
+          system,
+          ...
+        }:
+        let
+          inherit (inputs'.gomod2nix.legacyPackages) buildGoApplication;
+
+          go = pkgs.go_1_26;
+
+          aferox = buildGoApplication {
+            pname = "aferox";
+            version = "0.3.3";
+            src = lib.cleanSource ./.;
+            modules = ./gomod2nix.toml;
+            go = go;
+
+            subPackages = [ "." ];
+
+            nativeBuildInputs = [
+              pkgs.ginkgo
+            ];
+          };
+        in
+        {
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [ inputs.gomod2nix.overlays.default ];
+          };
+
+          packages.aferox = aferox;
+          packages.default = aferox;
+
+          devShells.default = pkgs.mkShell {
+            packages = with pkgs; [
+              docker
+              git
+              ginkgo
+              gnumake
+              go
+              gomod2nix
+              gopls
+            ];
+          };
+
+          treefmt = {
+            programs.nixfmt.enable = true;
+            programs.gofmt.enable = true;
+          };
+        };
+    };
+}
