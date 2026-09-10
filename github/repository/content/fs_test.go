@@ -11,7 +11,7 @@ import (
 
 var _ = Describe("Fs", func() {
 	It("should stat file", func() {
-		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
+		fs := content.NewFs(client, "unmango", "aferox", "main")
 
 		stat, err := fs.Stat("Makefile")
 
@@ -20,7 +20,7 @@ var _ = Describe("Fs", func() {
 	})
 
 	It("should open file", func() {
-		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
+		fs := content.NewFs(client, "unmango", "aferox", "main")
 
 		file, err := fs.Open("Makefile")
 
@@ -31,14 +31,15 @@ var _ = Describe("Fs", func() {
 	})
 
 	It("should open directory", func() {
-		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
+		fs := content.NewFs(client, "unmango", "aferox", "main")
 
-		file, err := fs.Open("cmd")
+		file, err := fs.Open("github")
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(file.Name()).To(Equal("cmd"))
-		Expect(file.Readdirnames(3)).To(
-			ConsistOf("ux", "uml2uml"),
+		Expect(file.Name()).To(Equal("github"))
+		Expect(file.Readdirnames(100)).To(
+			// This is still terrible, but it's better than before
+			ContainElements("ghpath", "repository", "user"),
 		)
 	})
 })
