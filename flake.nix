@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    systems.url = "github:nix-systems/default";
+    systems.url = "github:nix-systems/triplet";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     treefmt-nix = {

@@ -1,14 +1,12 @@
 _ := $(shell mkdir -p .make bin)
 export GOWORK := off
 
-DEVCTL    ?= go tool devctl
 GINKGO    ?= go tool ginkgo
 GOMOD2NIX ?= go tool gomod2nix
 NIX       ?= nix
 
 MODULES := containerregistry docker github gitignore protofs
 
-# GO_SRC != $(DEVCTL) list --go
 GO_SRC != find . -type f -path '*.go'
 
 ifeq ($(CI),)
@@ -34,6 +32,12 @@ import:
 	$(GOMOD2NIX) import --dir github
 	$(GOMOD2NIX) import --dir gitignore
 	$(GOMOD2NIX) import --dir protofs
+
+update:
+	nix flake update
+
+check:
+	nix flake check
 
 %/go.sum: %/go.mod ${GO_SRC}
 	go -C $* mod tidy
