@@ -35,6 +35,12 @@ import:
 	$(GOMOD2NIX) import --dir gitignore
 	$(GOMOD2NIX) import --dir protofs
 
+update:
+	nix flake update
+
+check:
+	nix flake check
+
 %/go.sum: %/go.mod ${GO_SRC}
 	go -C $* mod tidy
 
