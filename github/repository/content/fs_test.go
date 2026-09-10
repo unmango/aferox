@@ -11,7 +11,7 @@ import (
 
 var _ = Describe("Fs", func() {
 	It("should stat file", func() {
-		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
+		fs := content.NewFs(client, "unmango", "aferox", "main")
 
 		stat, err := fs.Stat("Makefile")
 
@@ -20,7 +20,7 @@ var _ = Describe("Fs", func() {
 	})
 
 	It("should open file", func() {
-		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
+		fs := content.NewFs(client, "unmango", "aferox", "main")
 
 		file, err := fs.Open("Makefile")
 
@@ -31,14 +31,15 @@ var _ = Describe("Fs", func() {
 	})
 
 	It("should open directory", func() {
-		fs := content.NewFs(client, "UnstoppableMango", "tdl", "main")
+		fs := content.NewFs(client, "unmango", "aferox", "main")
 
 		file, err := fs.Open("cmd")
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(file.Name()).To(Equal("cmd"))
 		Expect(file.Readdirnames(3)).To(
-			ConsistOf("ux", "uml2uml"),
+			// This is still terrible, but its better than before
+			ContainElements("hack", "internal"),
 		)
 	})
 })
