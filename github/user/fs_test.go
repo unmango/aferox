@@ -3,7 +3,7 @@ package user_test
 import (
 	"os"
 
-	"github.com/google/go-github/v86/github"
+	"github.com/google/go-github/v91/github"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
