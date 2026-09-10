@@ -33,13 +33,13 @@ var _ = Describe("Fs", func() {
 	It("should open directory", func() {
 		fs := content.NewFs(client, "unmango", "aferox", "main")
 
-		file, err := fs.Open("cmd")
+		file, err := fs.Open("github")
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(file.Name()).To(Equal("cmd"))
-		Expect(file.Readdirnames(3)).To(
-			// This is still terrible, but its better than before
-			ContainElements("hack", "internal"),
+		Expect(file.Name()).To(Equal("github"))
+		Expect(file.Readdirnames(100)).To(
+			// This is still terrible, but it's better than before
+			ContainElements("ghpath", "repository", "user"),
 		)
 	})
 })
