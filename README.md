@@ -2,6 +2,8 @@
 
 # aferox
 
+[![Hercules CI](https://hercules-ci.com/api/v1/site/github/account/unmango/project/aferox/badge)](https://hercules-ci.com/github/unmango/aferox)
+
 The `aferox` packages expands on [`github.com/spf13/afero`](https://github.com/spf13/afero) by adding more `afero.Fs` implementations, as well as various `afero.Fs` utility functions.
 
 [Go Doc](https://pkg.go.dev/github.com/unmango/aferox)
