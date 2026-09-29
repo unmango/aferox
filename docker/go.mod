@@ -7,7 +7,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 require (
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/onsi/ginkgo/v2 v2.32.2
-	github.com/onsi/gomega v1.43.0
+	github.com/onsi/gomega v1.44.0
 	github.com/spf13/afero v1.15.0
 	github.com/testcontainers/testcontainers-go v0.44.0
 	github.com/unmango/aferox v0.3.3
@@ -70,7 +70,7 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.41.0 // indirect
 	go.opentelemetry.io/otel/metric v1.44.0 // indirect
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect
-	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.54.0 // indirect
 	golang.org/x/mod v0.37.0 // indirect
 	golang.org/x/net v0.56.0 // indirect
