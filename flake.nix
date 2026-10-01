@@ -22,9 +22,9 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
 
-      imports = [
-        inputs.systems.flakeModule
-        inputs.treefmt-nix.flakeModule
+      imports = with inputs; [
+        systems.flakeModule or { }
+        treefmt-nix.flakeModule
         ./containerregistry
         ./docker
         ./github
