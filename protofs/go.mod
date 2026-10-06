@@ -5,7 +5,7 @@ go 1.25.5
 tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
-	buf.build/gen/go/unmango/protofs/grpc/go v1.6.2-20250613050322-304b4fb5d9b0.1
+	buf.build/gen/go/unmango/protofs/grpc/go v1.6.2-20260930133016-22b2f9f94e79.1
 	buf.build/gen/go/unmango/protofs/protocolbuffers/go v1.36.12-20250613050322-304b4fb5d9b0.2
 	github.com/onsi/ginkgo/v2 v2.33.0
 	github.com/onsi/gomega v1.44.0
