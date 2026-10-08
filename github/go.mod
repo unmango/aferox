@@ -6,7 +6,7 @@ tool github.com/onsi/ginkgo/v2/ginkgo
 
 require (
 	charm.land/log/v2 v2.0.1
-	github.com/google/go-github/v86 v86.0.0
+	github.com/google/go-github/v92 v92.0.0
 	github.com/goware/urlx v0.3.2
 	github.com/onsi/ginkgo/v2 v2.33.0
 	github.com/onsi/gomega v1.44.0
