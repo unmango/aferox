@@ -1,12 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "github>UnstoppableMango/renovate-config"
-  ],
-  "timezone": "America/Chicago",
-  "schedule": [
-    "before 4am on the first day of the month"
+    "github>UnstoppableMango/renovate-config",
+    "schedule:monthly"
   ],
   "ignoreDeps": [
     "github.com/unmango/aferox"
