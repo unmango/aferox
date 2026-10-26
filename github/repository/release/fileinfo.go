@@ -29,7 +29,7 @@ func (f *FileInfo) Mode() fs.FileMode {
 
 // Name implements fs.FileInfo.
 func (f *FileInfo) Name() string {
-	return f.release.GetName()
+	return f.release.GetTagName()
 }
 
 // Size implements fs.FileInfo.
