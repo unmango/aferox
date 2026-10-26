@@ -31,7 +31,7 @@ func (f *File) Close() error {
 
 // Name implements afero.File.
 func (f *File) Name() string {
-	return f.release.GetName()
+	return f.release.GetTagName()
 }
 
 // Read implements afero.File.

@@ -1,7 +1,6 @@
 package repository_test
 
 import (
-	"github.com/google/go-github/v86/github"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -10,7 +9,6 @@ import (
 
 var _ = Describe("Fs", func() {
 	It("should open repo", func() {
-		client := github.NewClient(nil)
 		fs := repository.NewFs(client, "UnstoppableMango")
 
 		repo, err := fs.Open("advent-of-code")
@@ -20,7 +18,6 @@ var _ = Describe("Fs", func() {
 	})
 
 	It("should stat release", func() {
-		client := github.NewClient(nil)
 		fs := repository.NewFs(client, "UnstoppableMango")
 
 		release, err := fs.Stat("tdl/releases/tag/v0.0.29")

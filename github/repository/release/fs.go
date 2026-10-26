@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/fs"
+	"net/http"
 	"os"
 
 	"github.com/google/go-github/v86/github"
@@ -148,16 +149,13 @@ func releaseId(ctx context.Context, gh *github.Client, path ghpath.ReleasePath) 
 		return id, nil
 	}
 
-	releases, _, err := gh.Repositories.ListReleases(ctx, path.Owner, path.Repository, nil)
+	r, res, err := gh.Repositories.GetReleaseByTag(ctx, path.Owner, path.Repository, path.Release)
+	if res != nil && res.StatusCode == http.StatusNotFound {
+		return 0, fmt.Errorf("%s: %w", path.Release, os.ErrNotExist)
+	}
 	if err != nil {
 		return 0, err
 	}
 
-	for _, r := range releases {
-		if r.GetName() == path.Release {
-			return r.GetID(), nil
-		}
-	}
-
-	return 0, os.ErrNotExist
+	return r.GetID(), nil
 }

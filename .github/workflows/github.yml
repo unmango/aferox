@@ -5,12 +5,12 @@ on:
     branches: [main]
     paths:
       - .github/workflows/github.yml
-      - github/*
+      - github/**
   pull_request:
     branches: [main]
     paths:
       - .github/workflows/github.yml
-      - github/*
+      - github/**
 
 permissions:
   id-token: write
