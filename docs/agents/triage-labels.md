@@ -14,7 +14,7 @@ When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the 
 
 Edit the right-hand column to match whatever vocabulary you actually use.
 
-The labels must exist in the tracker before a skill can apply them. Create any that are missing. Existing labels are left alone, and any other `gh` error is printed:
+The labels must exist in the tracker before a skill can apply them. Create any that are missing (if you edited the right-hand column, put those names in the loop). Existing labels are left alone, and any other `gh` error is printed:
 
 ```sh
 if existing=$(gh label list --limit 1000 --json name --jq '.[].name'); then
