@@ -1,6 +1,6 @@
 module github.com/unmango/aferox/protofs
 
-go 1.25.5
+go 1.26
 
 tool github.com/onsi/ginkgo/v2/ginkgo
 
@@ -12,7 +12,7 @@ require (
 	github.com/spf13/afero v1.15.0
 	google.golang.org/grpc v1.84.0
 	google.golang.org/protobuf v1.36.12
-	k8s.io/utils v0.0.0-20260707023825-cf1189d6abe3
+	k8s.io/utils v0.0.0-20261023123148-ca04ba58ecab
 )
 
 require (
