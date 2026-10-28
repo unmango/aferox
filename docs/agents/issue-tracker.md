@@ -20,7 +20,7 @@ Infer the repo from `git remote -v`; `gh` does this automatically when run insid
 When set to `yes`, PRs run through the same labels and states as issues, using the `gh pr` equivalents:
 
 - **Read a PR**: `gh pr view <number> --json number,title,body,labels,comments,reviews` and `gh pr diff <number>` for the diff.
-- **List external PRs for triage**: `gh pr list` doesn't expose author association, so use the REST API: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open&per_page=100' --jq '.[] | select(.author_association | IN("CONTRIBUTOR", "FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "NONE")) | {number, title, body, author: .user.login, author_association, labels: [.labels[].name]}'` (drops `OWNER`/`MEMBER`/`COLLABORATOR`). It prints one JSON object per line across all pages; `--jq` runs per page, so don't wrap the filter in `[...]`. Then read each kept PR with the command above.
+- **List external PRs for triage**: `gh pr list` doesn't expose author association, so use the REST API: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open&per_page=100' --jq '.[] | select(.author_association | IN("OWNER", "MEMBER", "COLLABORATOR") | not) | {number, title, body, author: .user.login, author_association, labels: [.labels[].name]}'` (drops `OWNER`/`MEMBER`/`COLLABORATOR`). It prints one JSON object per line across all pages; `--jq` runs per page, so don't wrap the filter in `[...]`. Then read each kept PR with the command above.
 - **Comment / label / close**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either: resolve with `gh pr view 42` and fall back to `gh issue view 42`.
