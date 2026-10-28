@@ -37,7 +37,15 @@ Run `gh issue view <number> --json number,title,body,labels,comments --jq '{numb
 
 Used by `/wayfinder`. The **map** is a single issue with **child** issues as tickets.
 
-The `wayfinder:*` labels must exist before the first `gh issue create --label`. Create any that are missing (existing labels are left alone): `for l in map research prototype grilling task; do gh label create "wayfinder:$l" 2>/dev/null || true; done`.
+The `wayfinder:*` labels must exist before the first `gh issue create --label`. Create any that are missing. Existing labels are left alone, and any other `gh` error is printed:
+
+```sh
+if existing=$(gh label list --limit 1000 --json name --jq '.[].name'); then
+  for l in map research prototype grilling task; do
+    printf '%s\n' "$existing" | grep -qxF "wayfinder:$l" || gh label create "wayfinder:$l"
+  done
+fi
+```
 
 - **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `gh issue create --label wayfinder:map`.
 - **Child ticket**: an issue linked to the map as a GitHub sub-issue (`gh api` on the sub-issues endpoint). Where sub-issues aren't enabled, add the child to a task list in the map body and put `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
